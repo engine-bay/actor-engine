@@ -1,0 +1,26 @@
+name: Continious Delivery
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Test
+      run: dotnet test --no-restore
+    - name: Build
+      run: dotnet build --no-restore -c release
+    - name: Package
+      run: dotnet pack -p:PackageVersion=${{  github.ref_name }} -c release
+    - name: Publish
+      run: dotnet nuget push ./EngineBay.ActorEngine/bin/Release/EngineBay.ActorEngine.${{  github.ref_name }}.nupkg --api-key "${{ secrets.NUGET_PUBLISHING_API_KEY }}" --source "https://api.nuget.org/v3/index.json"

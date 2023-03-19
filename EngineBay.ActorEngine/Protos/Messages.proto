@@ -1,0 +1,217 @@
+syntax = "proto3";
+
+option csharp_namespace = "EngineBay.ActorEngine";
+
+message DataVariableDependency {
+  string name = 1;
+  string type = 2;
+  string namespace = 3;
+}
+
+message DataVariableDependantMsg {
+  string identity = 1;
+  string name = 2;
+  string namespace = 3;
+  string type = 4;
+}
+
+message DataVariableIdentity {
+  string identity = 1;
+  string name = 2;
+  string sessionId = 3;
+  string type = 4;
+  string namespace = 5;
+}
+
+message DataVariable {
+  string name = 1;
+  string value = 2;
+  string namespace = 3;
+}
+
+message DataVariableValue {
+  string value = 1;
+}
+
+message DataTableColumnMsg {
+  string name = 1;
+  string type = 2;
+}
+
+message DataTableCellMsg {
+  string key = 1;
+  string value = 2;
+  string name = 3;
+  string namespace = 4;
+}
+
+message DataTableRowMsg {
+  repeated DataTableCellMsg dataTableCells = 1;
+}
+
+message DataTableMsg {
+  string name = 1;
+  string description = 2;
+  string namespace = 3;
+  repeated DataTableColumnMsg dataTableColumns = 4;
+  repeated DataTableRowMsg dataTableRows = 5;
+}
+
+message DataVariableUpdate {
+  string identity = 1;
+  string name = 2;
+  string sessionId = 3;
+  string type = 4;
+  string namespace = 5;
+  string value = 6;
+}
+
+message InputDataTableBlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string namespace = 3;
+}
+
+message InputDataVariableBlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string namespace = 3;
+  optional string type = 4;
+}
+
+message OutputDataVariableBlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string namespace = 3;
+  optional string type = 4;
+}
+
+message ExpressionBlueprintMsg {
+  string id = 1;
+  optional string expression = 2;
+  optional string objective = 3;
+  repeated InputDataVariableBlueprintMsg inputDataVariableBlueprints = 4;
+  repeated InputDataTableBlueprintMsg inputDataTableBlueprints = 5;
+  OutputDataVariableBlueprintMsg outputDataVariableBlueprint = 6;
+}
+
+message DataVariableBlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string namespace = 3;
+  optional string description = 4;
+  optional string type = 5;
+  optional string defaultValue = 6;
+}
+
+message TriggerExpressionBlueprintMsg {
+  string id = 1;
+  optional string expression = 2;
+  optional string objective = 3;
+  InputDataVariableBlueprintMsg inputDataVariableBlueprint = 4;
+}
+
+
+message TriggerBlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  repeated TriggerExpressionBlueprintMsg triggerExpressionBlueprints = 4;
+  OutputDataVariableBlueprintMsg outputDataVariableBlueprint = 5;
+}
+
+message DataTableColumnBlueprintMsg {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+}
+
+message DataTableCellBlueprintMsg {
+  string id = 1;
+  string key = 2;
+  string value = 3;
+  string name = 4;
+  string namespace = 5;
+}
+
+message DataTableRowBlueprintMsg {
+  string id = 1;
+  repeated DataTableCellBlueprintMsg dataTableCellBlueprints = 2;
+}
+
+message DataTableBlueprintMsg {
+  string id = 1;
+  string name = 2;
+  string namespace = 3;
+  string description = 4;
+  repeated InputDataVariableBlueprintMsg inputDataVariableBlueprints = 5;
+  repeated DataTableColumnBlueprintMsg dataTableColumnBlueprints = 6;
+  repeated DataTableRowBlueprintMsg dataTableRowBlueprints = 7;
+}
+
+message BlueprintMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  repeated ExpressionBlueprintMsg expressionBlueprints = 4;
+  repeated DataTableBlueprintMsg dataTableBlueprints = 5;
+  repeated DataVariableBlueprintMsg dataVariableBlueprints = 6;
+  repeated TriggerBlueprintMsg triggerBlueprints = 7;
+}
+
+message WorkbookMsg {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  repeated BlueprintMsg blueprints = 4;
+};
+
+message SessionStartRequest {
+  string sessionId = 1;
+  int32 logLevel = 2;
+  WorkbookMsg workbook = 3;
+}
+
+message SessionLoggerRequest {
+  string sessionId = 1;
+}
+
+message UseExpressionRequest {
+  string expression = 1;
+}
+
+message GrainIdentity {
+  string identity = 1;
+}
+
+message LogLevelRequest {
+  int32 logLevel = 1;
+}
+
+message SessionLogLineItem {
+  string message = 1;
+}
+
+message SessionLogMsg {
+  string sessionId = 1;
+  string message = 2;
+  int32 logLevel = 3;
+}
+
+message SessionLogsResponse {
+  repeated SessionLogMsg sessionlogs = 1;
+}
+
+message DataVariableStateMsg {
+  string identity = 1;
+  string sessionId = 2;
+  optional string name = 3;
+  optional string namespace = 4;
+  optional string type = 5;
+  optional string value = 6;
+}
+
+message SessionStateResponse {
+  repeated DataVariableStateMsg dataVariableStates = 1;
+}
+  

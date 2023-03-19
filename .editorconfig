@@ -1,0 +1,30 @@
+[*.cs]
+# SA1633: We don't need a C# code file is missing a standard file header.
+dotnet_diagnostic.SA1633.severity = silent
+
+# CS8620: Has a weird nullability check on .ThenIncludes that I can't figure out at the moment
+dotnet_diagnostic.CS8620.severity = silent
+
+# CS1591: XML comment documentation is horrible
+dotnet_diagnostic.CS1591.severity = silent
+dotnet_diagnostic.SA1600.severity = silent
+dotnet_diagnostic.SA1601.severity = silent 
+dotnet_diagnostic.SA1602.severity = silent 
+dotnet_diagnostic.SA1648.severity = silent
+
+# CA1303: No internationlization requirement, can have string literals
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1303
+dotnet_diagnostic.CA1303.severity = silent
+
+# CA2227: Causes regressions when seeding data (unable to parse lists from JSON)
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2227
+dotnet_diagnostic.CA2227.severity = silent
+
+# CA1725: Hurts legibility in query/command handlers that need to be able to rename the inputParameters from EngineBay.Core
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1725
+dotnet_diagnostic.CA1725.severity = silent
+
+# Treat all cs files in this folder as generated code
+[**/obj/**/*.cs]
+generated_code = true
+

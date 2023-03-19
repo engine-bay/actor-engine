@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+option csharp_namespace = "EngineBay.ActorEngine";
+
+import "Messages.proto";
+import "google/protobuf/empty.proto";
+
+service DataVariableGrain {
+  rpc UpdateIdentity (DataVariableIdentity) returns (google.protobuf.Empty);
+  rpc UpdateValue (DataVariableValue) returns (google.protobuf.Empty);
+  rpc GetValue (google.protobuf.Empty) returns (DataVariableValue);
+  rpc RegisterExpressionGrainDependant (GrainIdentity) returns (google.protobuf.Empty);
+  rpc RegisterDataTableGrainDependant (GrainIdentity) returns (google.protobuf.Empty);
+  rpc UseSessionLogger (SessionLoggerRequest) returns (google.protobuf.Empty);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+service SessionGrain {
+  rpc Start (SessionStartRequest) returns (google.protobuf.Empty);
+  rpc UpdateDataVariable (DataVariable) returns (google.protobuf.Empty);
+  rpc UpdateDataTable (DataTableMsg) returns (google.protobuf.Empty);
+  rpc GetLogs (google.protobuf.Empty) returns (SessionLogsResponse);
+  rpc GetState (google.protobuf.Empty) returns (SessionStateResponse);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+service SessionStateGrain {
+  rpc Start (SessionStartRequest) returns (google.protobuf.Empty);
+  rpc UpdateDataVariable (DataVariableUpdate) returns (google.protobuf.Empty);
+  rpc GetState (google.protobuf.Empty) returns (SessionStateResponse);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+service SessionLoggerGrain {
+  rpc Start (SessionStartRequest) returns (google.protobuf.Empty);
+  rpc Critical (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc Debug (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc Error (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc Info (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc Trace (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc Warning (SessionLogLineItem) returns (google.protobuf.Empty);
+  rpc GetLogs (google.protobuf.Empty) returns (SessionLogsResponse);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+service ExpressionGrain {
+  rpc UseExpression (UseExpressionRequest) returns (google.protobuf.Empty);
+  rpc UseSessionLogger (SessionLoggerRequest) returns (google.protobuf.Empty);
+  rpc DependOn (DataVariableDependency) returns (google.protobuf.Empty);
+  rpc OutputTo (DataVariableDependantMsg) returns (google.protobuf.Empty);
+  rpc UpdateDataVariable (DataVariableUpdate) returns (google.protobuf.Empty);
+  rpc Evaluate (google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+service DataTableGrain {
+  rpc UseSessionLogger (SessionLoggerRequest) returns (google.protobuf.Empty);
+  rpc DependOn (DataVariableDependency) returns (google.protobuf.Empty);
+  rpc OutputTo (DataVariableDependantMsg) returns (google.protobuf.Empty);
+  rpc UpdateDataVariable (DataVariableUpdate) returns (google.protobuf.Empty);
+  rpc Stop (google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+  
