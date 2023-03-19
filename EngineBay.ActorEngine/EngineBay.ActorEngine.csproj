@@ -44,13 +44,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Proto.Actor" Version="1.0.0" />
-    <PackageReference Include="Proto.Cluster" Version="1.0.0" />
-    <PackageReference Include="Proto.Cluster.CodeGen" Version="1.0.0" />
-    <PackageReference Include="Proto.Cluster.Kubernetes" Version="1.0.0" />
-    <PackageReference Include="Proto.Cluster.TestProvider" Version="1.0.0" />
-    <PackageReference Include="Proto.OpenTelemetry" Version="1.0.0" />
-    <PackageReference Include="Proto.Remote" Version="1.0.0" />
+    <PackageReference Include="Proto.Actor" Version="1.1.0" />
+    <PackageReference Include="Proto.Cluster" Version="1.1.0" />
+    <PackageReference Include="Proto.Cluster.CodeGen" Version="1.1.0" />
+    <PackageReference Include="Proto.Cluster.Kubernetes" Version="1.1.0" />
+    <PackageReference Include="Proto.Cluster.TestProvider" Version="1.1.0" />
+    <PackageReference Include="Proto.OpenTelemetry" Version="1.1.0" />
+    <PackageReference Include="Proto.Remote" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>
