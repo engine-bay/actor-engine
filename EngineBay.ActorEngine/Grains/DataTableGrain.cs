@@ -133,7 +133,13 @@ namespace EngineBay.ActorEngine
 
                     break;
                 case DataVariableTypes.DATATABLE:
-                    this.value = JsonConvert.DeserializeObject<DataTableMsg>(value);
+                    var dataTable = JsonConvert.DeserializeObject<DataTableMsg>(value);
+                    if (dataTable is null)
+                    {
+                        throw new ArgumentException(nameof(dataTable));
+                    }
+
+                    this.value = dataTable;
                     break;
                 default:
                     var message = $"Unkown data variable type '{type}' for data variable '{name}' in namespace '{nameSpace}' when updating value in DataTableGrain '{this.name}'";

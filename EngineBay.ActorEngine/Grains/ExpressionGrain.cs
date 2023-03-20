@@ -159,6 +159,11 @@ namespace EngineBay.ActorEngine
                     break;
                 case DataVariableTypes.DATATABLE:
                     var dataTableMsg = JsonConvert.DeserializeObject<DataTableMsg>(value);
+                    if (dataTableMsg is null)
+                    {
+                        throw new ArgumentException(nameof(dataTableMsg));
+                    }
+
                     var dataTable = new DataTable();
                     foreach (var dataTableColumn in dataTableMsg.DataTableColumns)
                     {

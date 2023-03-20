@@ -26,15 +26,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EngineBay.Core" Version="0.5.0" />
-    <PackageReference Include="EngineBay.Persistence" Version="0.7.0" />
+    <PackageReference Include="EngineBay.Persistence" Version="1.1.0" />
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.9" />
     <PackageReference Include="EngineBay.Blueprints" Version="0.2.0" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.9.0" />
     <PackageReference Include="Humanizer.Core" Version="2.14.1" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
-    <PackageReference Include="LinqKit.Microsoft.EntityFrameworkCore" Version="7.1.4" />
     <PackageReference Include="FluentValidation" Version="11.5.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
