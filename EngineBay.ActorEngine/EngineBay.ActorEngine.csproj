@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EngineBay.Core" Version="0.5.0" />
+    <PackageReference Include="EngineBay.Core" Version="0.6.0" />
     <PackageReference Include="EngineBay.Persistence" Version="0.7.0" />
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.9" />
     <PackageReference Include="EngineBay.Blueprints" Version="0.2.0" />
