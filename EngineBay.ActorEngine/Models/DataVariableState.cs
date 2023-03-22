@@ -46,11 +46,13 @@ namespace EngineBay.ActorEngine
             }
 
             modelBuilder.Entity<DataVariableState>().ToTable(typeof(DataVariableState).Name.Pluralize());
+
             modelBuilder.Entity<DataVariableState>().HasKey(x => x.Id);
 
             modelBuilder.Entity<DataVariableState>().Property(x => x.CreatedAt).IsRequired();
 
             modelBuilder.Entity<DataVariableState>().Property(x => x.LastUpdatedAt).IsRequired();
+
             modelBuilder.Entity<DataVariableState>().HasIndex(x => x.Identity);
 
             modelBuilder.Entity<DataVariableState>().HasIndex(x => x.SessionId);
