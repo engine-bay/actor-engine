@@ -18,21 +18,21 @@ namespace EngineApi.Tests
         {
             var mockProvider = new Mock<IServiceProvider>();
 
-            var blueprintsDbOptions = new DbContextOptionsBuilder<EngineWriteDb>()
-                .UseInMemoryDatabase(databaseName: "BlueprintsEngineDb")
+            var blueprintsDbOptions = new DbContextOptionsBuilder<ModuleWriteDbContext>()
+                .UseInMemoryDatabase(databaseName: "BlueprintsDb")
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            this.BlueprintsDb = new BlueprintsEngineQueryDb(blueprintsDbOptions);
+            this.BlueprintsDb = new BlueprintsQueryDbContext(blueprintsDbOptions);
 
             this.BlueprintsDb.Database.EnsureCreated();
 
-            var actorDbOptions = new DbContextOptionsBuilder<EngineWriteDb>()
+            var actorDbOptions = new DbContextOptionsBuilder<ModuleWriteDbContext>()
                 .UseInMemoryDatabase(databaseName: "ActorEngineDb")
                 .EnableSensitiveDataLogging()
                 .Options;
 
-            this.ActorDb = new ActorEngineWriteDb(actorDbOptions);
+            this.ActorDb = new ActorEngineWriteDbContext(actorDbOptions);
 
             this.ActorDb.Database.EnsureCreated();
 
@@ -92,9 +92,9 @@ namespace EngineApi.Tests
 
         protected ActorSystem ActorSystem { get; set; }
 
-        protected BlueprintsEngineQueryDb BlueprintsDb { get; set; }
+        protected BlueprintsQueryDbContext BlueprintsDb { get; set; }
 
-        protected ActorEngineWriteDb ActorDb { get; set; }
+        protected ActorEngineWriteDbContext ActorDb { get; set; }
 
         public ValueTask DisposeAsync()
         {

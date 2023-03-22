@@ -2,19 +2,20 @@ namespace EngineBay.ActorEngine
 {
     using EngineBay.Blueprints;
     using EngineBay.Core;
+    using EngineBay.Persistence;
     using FluentValidation;
     using Microsoft.EntityFrameworkCore;
     using Proto;
     using Proto.Cluster;
 
-    public class RunEvaluation : ICommandHandler<CreateEvaluationDto, EvaluationResultDto>
+    public class RunEvaluation : ICommandHandler<CreateEvaluationDto, ApplicationUser, EvaluationResultDto>
     {
-        private readonly ActorEngineWriteDb actorDb;
-        private readonly BlueprintsEngineQueryDb blueprintsDb;
+        private readonly ActorEngineWriteDbContext actorDb;
+        private readonly BlueprintsQueryDbContext blueprintsDb;
         private readonly ActorSystem actorSystem;
         private readonly IValidator<CreateEvaluationDto> validator;
 
-        public RunEvaluation(ActorEngineWriteDb actorDb, BlueprintsEngineQueryDb blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
+        public RunEvaluation(ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
         {
             this.actorDb = actorDb;
             this.blueprintsDb = blueprintsDb;
@@ -22,7 +23,7 @@ namespace EngineBay.ActorEngine
             this.validator = validator;
         }
 
-        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, CancellationToken cancellation)
+        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ApplicationUser user, CancellationToken cancellation)
         {
             if (createEvaluationDto is null)
             {
@@ -124,7 +125,7 @@ namespace EngineBay.ActorEngine
 
             this.actorDb.DataVariableStates.AddRange(dataVariableStates);
 
-            await this.actorDb.SaveChangesAsync(cancellation).ConfigureAwait(false);
+            await this.actorDb.SaveChangesAsync(user, cancellation).ConfigureAwait(false);
 
             await sessionGrain.Stop(cancellation).ConfigureAwait(false);
 

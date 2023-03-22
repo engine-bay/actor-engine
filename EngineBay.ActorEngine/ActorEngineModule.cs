@@ -3,6 +3,7 @@ namespace EngineBay.ActorEngine
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
+    using Microsoft.AspNetCore.Identity;
     using Proto.Remote.HealthChecks;
 
     public class ActorEngineModule : IModule
@@ -17,7 +18,7 @@ namespace EngineBay.ActorEngine
             services.AddTransient<IValidator<EvaluationDataVariableDto>, EvaluationDataVariableDtoValidator>();
 
             // register persistence services
-            var databaseConfiguration = new CQRSDatabaseConfiguration<ActorEngineDb, ActorEngineQueryDb, ActorEngineWriteDb>();
+            var databaseConfiguration = new CQRSDatabaseConfiguration<ActorEngineDbContext, ActorEngineQueryDbContext, ActorEngineWriteDbContext>();
             databaseConfiguration.RegisterDatabases(services);
 
             // Register an actor system
@@ -33,9 +34,16 @@ namespace EngineBay.ActorEngine
 
         public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
+            endpoints.MapPost("/evaluations", async (UserManager<ApplicationUser> userManager, HttpContext httpContext, RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
             {
-                var dto = await command.Handle(createEvaluationDto, cancellation).ConfigureAwait(false);
+                var user = await userManager.GetUserAsync(httpContext.User).ConfigureAwait(false);
+
+                if (user is null)
+                {
+                    return Results.Unauthorized();
+                }
+
+                var dto = await command.Handle(createEvaluationDto, user, cancellation).ConfigureAwait(false);
                 return Results.Ok(dto);
             });
 
