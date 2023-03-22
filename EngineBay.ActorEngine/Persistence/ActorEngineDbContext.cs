@@ -3,9 +3,9 @@ namespace EngineBay.ActorEngine
     using EngineBay.Persistence;
     using Microsoft.EntityFrameworkCore;
 
-    public class ActorEngineDb : EngineWriteDb, IEngineWriteDb
+    public class ActorEngineDbContext : ModuleWriteDbContext
     {
-        public ActorEngineDb(DbContextOptions<EngineWriteDb> options)
+        public ActorEngineDbContext(DbContextOptions<ModuleWriteDbContext> options)
             : base(options)
         {
         }
@@ -18,6 +18,8 @@ namespace EngineBay.ActorEngine
         {
             SessionLog.CreateDataAnnotations(modelBuilder);
             DataVariableState.CreateDataAnnotations(modelBuilder);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

@@ -3,9 +3,9 @@ namespace EngineBay.ActorEngine
     using EngineBay.Persistence;
     using Microsoft.EntityFrameworkCore;
 
-    public class ActorEngineWriteDb : ActorEngineDb
+    public class ActorEngineWriteDbContext : ActorEngineQueryDbContext
     {
-        public ActorEngineWriteDb(DbContextOptions<EngineWriteDb> options)
+        public ActorEngineWriteDbContext(DbContextOptions<ModuleWriteDbContext> options)
             : base(options)
         {
         }
