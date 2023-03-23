@@ -34,18 +34,11 @@ namespace EngineBay.ActorEngine
 
         public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("/evaluations", async (UserManager<ApplicationUser> userManager, HttpContext httpContext, RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
+            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
             {
-                var user = await userManager.GetUserAsync(httpContext.User).ConfigureAwait(false);
-
-                if (user is null)
-                {
-                    return Results.Unauthorized();
-                }
-
-                var dto = await command.Handle(createEvaluationDto, user, cancellation).ConfigureAwait(false);
+                var dto = await command.Handle(createEvaluationDto, cancellation).ConfigureAwait(false);
                 return Results.Ok(dto);
-            });
+            }).RequireAuthorization();
 
             return endpoints;
         }

@@ -1,5 +1,6 @@
 namespace EngineBay.ActorEngine
 {
+    using System.Security.Claims;
     using EngineBay.Blueprints;
     using EngineBay.Core;
     using EngineBay.Persistence;
@@ -8,23 +9,31 @@ namespace EngineBay.ActorEngine
     using Proto;
     using Proto.Cluster;
 
-    public class RunEvaluation : ICommandHandler<CreateEvaluationDto, ApplicationUser, EvaluationResultDto>
+    public class RunEvaluation : ICommandHandler<CreateEvaluationDto, EvaluationResultDto>
     {
         private readonly ActorEngineWriteDbContext actorDb;
         private readonly BlueprintsQueryDbContext blueprintsDb;
         private readonly ActorSystem actorSystem;
         private readonly IValidator<CreateEvaluationDto> validator;
 
-        public RunEvaluation(ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
+        private readonly GetApplicationUser getApplicationUserQuery;
+
+        private readonly ClaimsPrincipal claimsPrincipal;
+
+        public RunEvaluation(ClaimsPrincipal claimsPrincipal, GetApplicationUser getApplicationUserQuery, ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
         {
+            this.claimsPrincipal = claimsPrincipal;
+            this.getApplicationUserQuery = getApplicationUserQuery;
             this.actorDb = actorDb;
             this.blueprintsDb = blueprintsDb;
             this.actorSystem = actorSystem;
             this.validator = validator;
         }
 
-        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ApplicationUser user, CancellationToken cancellation)
+        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, CancellationToken cancellation)
         {
+            var user = await this.getApplicationUserQuery.Handle(this.claimsPrincipal, cancellation).ConfigureAwait(false);
+
             if (createEvaluationDto is null)
             {
                 throw new ArgumentNullException(nameof(createEvaluationDto));
