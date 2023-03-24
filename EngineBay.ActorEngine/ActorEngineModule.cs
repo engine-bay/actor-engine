@@ -1,9 +1,9 @@
 namespace EngineBay.ActorEngine
 {
+    using System.Security.Claims;
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
-    using Microsoft.AspNetCore.Identity;
     using Proto.Remote.HealthChecks;
 
     public class ActorEngineModule : IModule
@@ -34,9 +34,9 @@ namespace EngineBay.ActorEngine
 
         public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
         {
-            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
+            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation) =>
             {
-                var dto = await command.Handle(createEvaluationDto, cancellation).ConfigureAwait(false);
+                var dto = await command.Handle(createEvaluationDto, claimsPrincipal, cancellation).ConfigureAwait(false);
                 return Results.Ok(dto);
             }).RequireAuthorization();
 

@@ -18,11 +18,8 @@ namespace EngineBay.ActorEngine
 
         private readonly GetApplicationUser getApplicationUserQuery;
 
-        private readonly ClaimsPrincipal claimsPrincipal;
-
-        public RunEvaluation(ClaimsPrincipal claimsPrincipal, GetApplicationUser getApplicationUserQuery, ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
+        public RunEvaluation(GetApplicationUser getApplicationUserQuery, ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
         {
-            this.claimsPrincipal = claimsPrincipal;
             this.getApplicationUserQuery = getApplicationUserQuery;
             this.actorDb = actorDb;
             this.blueprintsDb = blueprintsDb;
@@ -30,9 +27,9 @@ namespace EngineBay.ActorEngine
             this.validator = validator;
         }
 
-        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, CancellationToken cancellation)
+        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation)
         {
-            var user = await this.getApplicationUserQuery.Handle(this.claimsPrincipal, cancellation).ConfigureAwait(false);
+            var user = await this.getApplicationUserQuery.Handle(claimsPrincipal, cancellation).ConfigureAwait(false);
 
             if (createEvaluationDto is null)
             {
