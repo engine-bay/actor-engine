@@ -1,6 +1,7 @@
 namespace EngineBay.ActorEngine
 {
     using System.Security.Claims;
+    using EngineBay.Authentication;
     using EngineBay.Blueprints;
     using EngineBay.Core;
     using EngineBay.Persistence;
