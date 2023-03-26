@@ -42,5 +42,10 @@ namespace EngineBay.ActorEngine
 
             return endpoints;
         }
+
+        public WebApplication AddMiddleware(WebApplication app)
+        {
+            return app;
+        }
     }
 }
