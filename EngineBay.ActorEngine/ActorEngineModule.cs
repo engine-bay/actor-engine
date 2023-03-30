@@ -1,9 +1,11 @@
 namespace EngineBay.ActorEngine
 {
+    using System;
     using System.Security.Claims;
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
+    using Proto;
     using Proto.Remote.HealthChecks;
 
     public class ActorEngineModule : IModule
@@ -45,6 +47,14 @@ namespace EngineBay.ActorEngine
 
         public WebApplication AddMiddleware(WebApplication app)
         {
+            if (app is null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
+            Log.SetLoggerFactory(loggerFactory);
+
             return app;
         }
     }
