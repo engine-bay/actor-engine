@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.12" />
+    <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.13" />
     <PackageReference Include="EngineBay.Blueprints" Version="0.18.2" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.10.0" />
