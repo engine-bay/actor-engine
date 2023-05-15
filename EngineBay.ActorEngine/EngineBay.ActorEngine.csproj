@@ -46,7 +46,7 @@
     <PackageReference Include="Proto.Cluster.CodeGen" Version="1.1.0" />
     <PackageReference Include="Proto.Cluster.Kubernetes" Version="1.1.0" />
     <PackageReference Include="Proto.Cluster.TestProvider" Version="1.1.0" />
-    <PackageReference Include="Proto.Remote" Version="1.1.0" />
+    <PackageReference Include="Proto.Remote" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>
