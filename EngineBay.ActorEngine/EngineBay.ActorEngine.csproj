@@ -30,7 +30,7 @@
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.14" />
     <PackageReference Include="EngineBay.Blueprints" Version="0.18.3" />
     <PackageReference Include="Flee" Version="2.0.0" />
-    <PackageReference Include="UnitsNet" Version="5.12.0" />
+    <PackageReference Include="UnitsNet" Version="5.16.0" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
     <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
