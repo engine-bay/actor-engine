@@ -17,6 +17,7 @@
     <RepositoryType>git</RepositoryType>
     <TargetType>library</TargetType>
     <IsPackable>true</IsPackable>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.14" />
-    <PackageReference Include="EngineBay.Blueprints" Version="0.18.10" />
+    <PackageReference Include="EngineBay.Blueprints" Version="0.18.14" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.31.0" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
