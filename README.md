@@ -1,5 +1,6 @@
 # EngineBay.ActorEngine
 
+[![NuGet version](https://badge.fury.io/nu/EngineBay.ActorEngine.svg)](https://badge.fury.io/nu/EngineBay.ActorEngine)
 [![Maintainability](https://api.codeclimate.com/v1/badges/b4b63f8d7190dcd409ff/maintainability)](https://codeclimate.com/github/engine-bay/actor-engine/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/b4b63f8d7190dcd409ff/test_coverage)](https://codeclimate.com/github/engine-bay/actor-engine/test_coverage)
 
