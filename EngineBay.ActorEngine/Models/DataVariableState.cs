@@ -3,11 +3,12 @@ namespace EngineBay.ActorEngine
     using System;
     using EngineBay.Core;
     using Humanizer;
+    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.EntityFrameworkCore;
 
     public class DataVariableState : BaseModel
     {
-        public DataVariableState(DataVariableStateMsg dataVariableStateMsg)
+        public DataVariableState(DataVariableStateMsg dataVariableStateMsg, IDataProtectionProvider dataProtectionProvider)
         {
             if (dataVariableStateMsg is null)
             {
@@ -19,7 +20,7 @@ namespace EngineBay.ActorEngine
             this.Name = dataVariableStateMsg.Name;
             this.Namespace = dataVariableStateMsg.Namespace;
             this.Type = dataVariableStateMsg.Type;
-            this.Value = dataVariableStateMsg.Value;
+            this.SetValue(dataVariableStateMsg.Value, dataProtectionProvider);
         }
 
         public DataVariableState()
@@ -36,7 +37,7 @@ namespace EngineBay.ActorEngine
 
         public string? Type { get; set; }
 
-        public string? Value { get; set; }
+        public string? EncryptedValue { get; set; }
 
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
         {
@@ -60,6 +61,40 @@ namespace EngineBay.ActorEngine
             modelBuilder.Entity<DataVariableState>().HasIndex(x => x.Namespace);
 
             modelBuilder.Entity<DataVariableState>().HasIndex(x => new { x.Name, x.Namespace, x.Type, x.SessionId, x.CreatedAt }).IsUnique();
+        }
+
+        public string GetValue(IDataProtectionProvider dataProtectionProvider)
+        {
+            if (dataProtectionProvider is null)
+            {
+                throw new ArgumentNullException(nameof(dataProtectionProvider));
+            }
+
+            if (this.EncryptedValue is null)
+            {
+                throw new InvalidOperationException(nameof(this.EncryptedValue));
+            }
+
+            var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.DataVariableStateValue);
+
+            return DataProtectionCommonExtensions.Unprotect(dataProtector, this.EncryptedValue);
+        }
+
+        public void SetValue(string? value, IDataProtectionProvider dataProtectionProvider)
+        {
+            if (value is null)
+            {
+                return;
+            }
+
+            if (dataProtectionProvider is null)
+            {
+                throw new ArgumentNullException(nameof(dataProtectionProvider));
+            }
+
+            var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.DataVariableStateValue);
+
+            this.EncryptedValue = DataProtectionCommonExtensions.Protect(dataProtector, value);
         }
     }
 }

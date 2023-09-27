@@ -3,11 +3,12 @@ namespace EngineBay.ActorEngine
     using System;
     using EngineBay.Core;
     using Humanizer;
+    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.EntityFrameworkCore;
 
     public class SessionLog : BaseModel
     {
-        public SessionLog(SessionLogMsg sessionLogMsg)
+        public SessionLog(SessionLogMsg sessionLogMsg, IDataProtectionProvider dataProtectionProvider)
         {
             if (sessionLogMsg is null)
             {
@@ -15,8 +16,8 @@ namespace EngineBay.ActorEngine
             }
 
             this.SessionId = new Guid(sessionLogMsg.SessionId);
-            this.Message = sessionLogMsg.Message;
             this.LogLevel = (LogLevel)sessionLogMsg.LogLevel;
+            this.SetMessage(sessionLogMsg.Message, dataProtectionProvider);
         }
 
         public SessionLog()
@@ -25,7 +26,7 @@ namespace EngineBay.ActorEngine
 
         public Guid SessionId { get; set; }
 
-        public string? Message { get; set; }
+        public string? EncryptedMessage { get; set; }
 
         public LogLevel? LogLevel { get; set; }
 
@@ -44,13 +45,47 @@ namespace EngineBay.ActorEngine
 
             modelBuilder.Entity<SessionLog>().Property(x => x.LastUpdatedAt).IsRequired();
 
-            modelBuilder.Entity<SessionLog>().Property(x => x.Message).IsRequired();
+            modelBuilder.Entity<SessionLog>().Property(x => x.EncryptedMessage).IsRequired();
 
             modelBuilder.Entity<SessionLog>().Property(x => x.LogLevel).IsRequired();
 
             modelBuilder.Entity<SessionLog>().HasIndex(x => x.LogLevel);
 
             modelBuilder.Entity<SessionLog>().HasIndex(x => x.SessionId);
+        }
+
+        public string GetMessage(IDataProtectionProvider dataProtectionProvider)
+        {
+            if (dataProtectionProvider is null)
+            {
+                throw new ArgumentNullException(nameof(dataProtectionProvider));
+            }
+
+            if (this.EncryptedMessage is null)
+            {
+                throw new InvalidOperationException(nameof(this.EncryptedMessage));
+            }
+
+            var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.SessionLogMessage);
+
+            return DataProtectionCommonExtensions.Unprotect(dataProtector, this.EncryptedMessage);
+        }
+
+        public void SetMessage(string? value, IDataProtectionProvider dataProtectionProvider)
+        {
+            if (value is null)
+            {
+                return;
+            }
+
+            if (dataProtectionProvider is null)
+            {
+                throw new ArgumentNullException(nameof(dataProtectionProvider));
+            }
+
+            var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.SessionLogMessage);
+
+            this.EncryptedMessage = DataProtectionCommonExtensions.Protect(dataProtector, value);
         }
     }
 }
