@@ -1,8 +1,10 @@
 namespace EngineBay.ActorEngine
 {
+    using Microsoft.AspNetCore.DataProtection;
+
     public class EvaluationDataVariableStateDto
     {
-        public EvaluationDataVariableStateDto(DataVariableState dataVariableState)
+        public EvaluationDataVariableStateDto(DataVariableState dataVariableState, IDataProtectionProvider dataProtectionProvider)
         {
             if (dataVariableState is null)
             {
@@ -12,7 +14,7 @@ namespace EngineBay.ActorEngine
             this.Name = dataVariableState.Name;
             this.Namespace = dataVariableState.Namespace;
             this.Type = dataVariableState.Type;
-            this.Value = dataVariableState.Value;
+            this.Value = dataVariableState.GetValue(dataProtectionProvider);
         }
 
         public string? Name { get; set; }

@@ -4,8 +4,8 @@ namespace EngineBay.ActorEngine
     using EngineBay.Authentication;
     using EngineBay.Blueprints;
     using EngineBay.Core;
-    using EngineBay.Persistence;
     using FluentValidation;
+    using Microsoft.AspNetCore.DataProtection;
     using Microsoft.EntityFrameworkCore;
     using Proto;
     using Proto.Cluster;
@@ -16,16 +16,23 @@ namespace EngineBay.ActorEngine
         private readonly BlueprintsQueryDbContext blueprintsDb;
         private readonly ActorSystem actorSystem;
         private readonly IValidator<CreateEvaluationDto> validator;
-
+        private readonly IDataProtectionProvider dataProtectionProvider;
         private readonly GetApplicationUser getApplicationUserQuery;
 
-        public RunEvaluation(GetApplicationUser getApplicationUserQuery, ActorEngineWriteDbContext actorDb, BlueprintsQueryDbContext blueprintsDb, ActorSystem actorSystem, IValidator<CreateEvaluationDto> validator)
+        public RunEvaluation(
+            GetApplicationUser getApplicationUserQuery,
+            ActorEngineWriteDbContext actorDb,
+            BlueprintsQueryDbContext blueprintsDb,
+            ActorSystem actorSystem,
+            IValidator<CreateEvaluationDto> validator,
+            IDataProtectionProvider dataProtectionProvider)
         {
             this.getApplicationUserQuery = getApplicationUserQuery;
             this.actorDb = actorDb;
             this.blueprintsDb = blueprintsDb;
             this.actorSystem = actorSystem;
             this.validator = validator;
+            this.dataProtectionProvider = dataProtectionProvider;
         }
 
         public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation)
@@ -95,7 +102,7 @@ namespace EngineBay.ActorEngine
                         Workbook = workbookMsg,
                     }, cancellation).ConfigureAwait(false);
 
-            // Set the  session's varaibles and then things calculate
+            // Set the  session's variables and then things calculate
             if (createEvaluationDto.DataVariables is not null)
             {
                 foreach (var dataVariable in createEvaluationDto.DataVariables)
@@ -117,7 +124,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(sessionLogsResponse));
             }
 
-            var sessionLogs = sessionLogsResponse.Sessionlogs.Select(sessionLogMsg => new SessionLog(sessionLogMsg));
+            var sessionLogs = sessionLogsResponse.Sessionlogs.Select(sessionLogMsg => new SessionLog(sessionLogMsg, this.dataProtectionProvider));
 
             this.actorDb.SessionLogs.AddRange(sessionLogs);
 
@@ -128,7 +135,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(sessionStateResponse));
             }
 
-            var dataVariableStates = sessionStateResponse.DataVariableStates.Select(dataVariableStateMsg => new DataVariableState(dataVariableStateMsg));
+            var dataVariableStates = sessionStateResponse.DataVariableStates.Select(dataVariableStateMsg => new DataVariableState(dataVariableStateMsg, this.dataProtectionProvider));
 
             this.actorDb.DataVariableStates.AddRange(dataVariableStates);
 
@@ -140,8 +147,8 @@ namespace EngineBay.ActorEngine
             {
                 Id = sessionId,
                 WorkbookId = workbookId,
-                DataVariables = dataVariableStates.Select(dataVariableState => new EvaluationDataVariableStateDto(dataVariableState)),
-                Logs = sessionLogs.Select(sessionLog => new SessionLogDto(sessionLog)),
+                DataVariables = dataVariableStates.Select(dataVariableState => new EvaluationDataVariableStateDto(dataVariableState, this.dataProtectionProvider)),
+                Logs = sessionLogs.Select(sessionLog => new SessionLogDto(sessionLog, this.dataProtectionProvider)),
             };
         }
     }

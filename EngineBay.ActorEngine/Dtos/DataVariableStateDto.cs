@@ -1,8 +1,10 @@
 namespace EngineBay.ActorEngine
 {
+    using Microsoft.AspNetCore.DataProtection;
+
     public class DataVariableStateDto
     {
-        public DataVariableStateDto(DataVariableState dataVariableState)
+        public DataVariableStateDto(DataVariableState dataVariableState, IDataProtectionProvider dataProtectionProvider)
         {
             if (dataVariableState is null)
             {
@@ -14,7 +16,7 @@ namespace EngineBay.ActorEngine
             this.SessionId = dataVariableState.SessionId;
             this.Name = dataVariableState.Name;
             this.Type = dataVariableState.Type;
-            this.Value = dataVariableState.Value;
+            this.Value = dataVariableState.GetValue(dataProtectionProvider);
         }
 
         public Guid Id { get; set; }

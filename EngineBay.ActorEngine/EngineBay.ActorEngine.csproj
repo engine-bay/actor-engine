@@ -30,6 +30,7 @@
   <ItemGroup>
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.14" />
     <PackageReference Include="EngineBay.Blueprints" Version="0.20.0" />
+    <PackageReference Include="EngineBay.DataProtection" Version="0.1.0" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.31.0" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
@@ -42,12 +43,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Proto.Actor" Version="1.1.0" />
-    <PackageReference Include="Proto.Cluster" Version="1.1.0" />
-    <PackageReference Include="Proto.Cluster.CodeGen" Version="1.1.0" />
-    <PackageReference Include="Proto.Cluster.Kubernetes" Version="1.1.0" />
-    <PackageReference Include="Proto.Cluster.TestProvider" Version="1.1.0" />
-    <PackageReference Include="Proto.Remote" Version="1.1.0" />
+    <PackageReference Include="Proto.Actor" Version="1.4.0" />
+    <PackageReference Include="Proto.Cluster" Version="1.4.0" />
+    <PackageReference Include="Proto.Cluster.CodeGen" Version="1.4.0" />
+    <PackageReference Include="Proto.Cluster.Kubernetes" Version="1.4.0" />
+    <PackageReference Include="Proto.Cluster.TestProvider" Version="1.4.0" />
+    <PackageReference Include="Proto.Remote" Version="1.4.0" />
   </ItemGroup>
 
   <ItemGroup>
