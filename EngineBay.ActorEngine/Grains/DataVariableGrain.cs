@@ -65,7 +65,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable '{this.name}' in namespace '{this.nameSpace}' had an expression registered as a dependant",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task RegisterDataTableGrainDependant(GrainIdentity request)
@@ -86,7 +86,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable '{this.name}' in namespace '{this.nameSpace}' had a data table registered as a dependant",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task UpdateValue(DataVariableValue request)
@@ -108,7 +108,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable '{this.name}' in namespace '{this.nameSpace}' value was updated but did not change it's actual value of '{this.value}'. The propagation of updates was halted.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
                 return;
             }
 
@@ -118,10 +118,10 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable '{this.name}' in namespace '{this.nameSpace}' value was updated to '{this.value}'.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
-            await this.NotifyDependents().ConfigureAwait(false);
-            await this.SaveState().ConfigureAwait(false);
+            await this.NotifyDependents();
+            await this.SaveState();
         }
 
         public override async Task UpdateIdentity(DataVariableIdentity request)
@@ -136,7 +136,7 @@ namespace EngineBay.ActorEngine
             this.name = request.Name;
             this.nameSpace = request.Namespace;
             this.type = request.Type;
-            await this.SaveState().ConfigureAwait(false);
+            await this.SaveState();
         }
 
         public override async Task UseSessionLogger(SessionLoggerRequest request)
@@ -157,7 +157,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable with identity {this.clusterIdentity}' was registered to start logging against sessionId '{request.SessionId}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task Stop()
@@ -171,7 +171,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data variable with identity {this.clusterIdentity}' is being stopped.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             this.logger = null;
 
@@ -204,19 +204,19 @@ namespace EngineBay.ActorEngine
 
             foreach (var dependent in this.dependentDataTableGrains)
             {
-                await this.Context.GetDataTableGrain(dependent).UpdateDataVariable(dataVariableUpdate, CancellationToken.None).ConfigureAwait(false);
+                await this.Context.GetDataTableGrain(dependent).UpdateDataVariable(dataVariableUpdate, CancellationToken.None);
             }
 
             foreach (var dependent in this.dependentExpressionGrains)
             {
-                await this.Context.GetExpressionGrain(dependent).UpdateDataVariable(dataVariableUpdate, CancellationToken.None).ConfigureAwait(false);
+                await this.Context.GetExpressionGrain(dependent).UpdateDataVariable(dataVariableUpdate, CancellationToken.None);
             }
 
             await this.logger.Trace(
                       new SessionLogLineItem
                       {
                           Message = $"Notified {this.dependentExpressionGrains.Count + this.dependentDataTableGrains.Count} dependents of updated value of '{this.value}' for data variable '{this.name}' in namespace '{this.nameSpace}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         private async Task SaveState()
@@ -249,7 +249,7 @@ namespace EngineBay.ActorEngine
             };
 
             await this.Context.Cluster().GetSessionStateGrain(sessionIdentity)
-                            .UpdateDataVariable(dataVariableUpdate, CancellationToken.None).ConfigureAwait(false);
+                            .UpdateDataVariable(dataVariableUpdate, CancellationToken.None);
         }
     }
 }

@@ -28,13 +28,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.14" />
-    <PackageReference Include="EngineBay.Blueprints" Version="0.20.0" />
-    <PackageReference Include="EngineBay.DataProtection" Version="0.1.0" />
+    <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.16" />
+    <PackageReference Include="EngineBay.Blueprints" Version="1.0.0" />
+    <PackageReference Include="EngineBay.DataProtection" Version="1.0.0" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.31.0" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
-    <PackageReference Include="FluentValidation" Version="11.5.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

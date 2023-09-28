@@ -33,13 +33,13 @@ namespace EngineBay.ActorEngine
 
             this.logger = this.Context.GetSessionLoggerGrain(request.SessionId.ToString());
 
-            await this.logger.Start(request, CancellationToken.None).ConfigureAwait(false);
+            await this.logger.Start(request, CancellationToken.None);
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Starting session state for sessionId '{this.sessionId}'",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
@@ -67,7 +67,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Session state tracked the updated the value of data variable '{request.Name}' in namespace '{request.Namespace}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
             }
         }
 
@@ -82,7 +82,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Session state with identity {this.clusterIdentity}' is being stopped.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             this.logger = null;
 #pragma warning disable CA1849 // PoisonAsync causes a lockup, uncertain as to why for the moment
@@ -115,7 +115,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Session state returned the values of {this.dataVariableStates.Values.Count} data variables.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             return sessionStateResponse;
         }

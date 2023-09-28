@@ -2,7 +2,7 @@ namespace EngineApi.Tests
 {
     using System.Threading.Tasks;
     using EngineBay.ActorEngine;
-    using EngineBay.Core;
+    using EngineBay.Blueprints;
     using Microsoft.Extensions.Logging;
     using Proto.Cluster;
     using Xunit;
@@ -20,7 +20,7 @@ namespace EngineApi.Tests
             await this.ActorSystem
             .Cluster()
             .StartMemberAsync()
-            .ConfigureAwait(false);
+            ;
 
             var sessionId = Guid.NewGuid().ToString();
             var workbookId = Guid.NewGuid().ToString();
@@ -30,7 +30,7 @@ namespace EngineApi.Tests
                 {
                     SessionId = sessionId,
                     LogLevel = (int)LogLevel.Trace,
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             var dataVariableIdentity = Guid.NewGuid().ToString();
 
@@ -43,7 +43,7 @@ namespace EngineApi.Tests
                         {
                             SessionId = sessionId.ToString(),
                         },
-                        CancellationToken.None).ConfigureAwait(false);
+                        CancellationToken.None);
 
             await dataVariableGrain
                     .UpdateIdentity(
@@ -55,7 +55,7 @@ namespace EngineApi.Tests
                             SessionId = sessionId,
                             Type = DataVariableTypes.FLOAT,
                         }, CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             var expressionGrainIdentity = Guid.NewGuid().ToString();
 
@@ -68,7 +68,7 @@ namespace EngineApi.Tests
                         {
                             SessionId = sessionId.ToString(),
                         },
-                        CancellationToken.None).ConfigureAwait(false);
+                        CancellationToken.None);
 
             await expressionGrain
                     .UseExpression(
@@ -76,7 +76,7 @@ namespace EngineApi.Tests
                         {
                             Expression = "3 * 2",
                         }, CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             await expressionGrain
                     .OutputTo(
@@ -87,15 +87,15 @@ namespace EngineApi.Tests
                             Namespace = "Global",
                             Type = DataVariableTypes.FLOAT,
                         }, CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             await expressionGrain
                     .Evaluate(CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             var result = await dataVariableGrain
                     .GetValue(CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             Assert.NotNull(result);
             Assert.Equal("6", result.Value);

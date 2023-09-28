@@ -5,7 +5,7 @@ namespace EngineBay.ActorEngine
     using System.Globalization;
     using System.Text;
     using System.Threading.Tasks;
-    using EngineBay.Core;
+    using EngineBay.Blueprints;
     using Google.Protobuf.Collections;
     using Newtonsoft.Json;
     using Proto;
@@ -57,16 +57,16 @@ namespace EngineBay.ActorEngine
 
             this.logger = this.Context.GetSessionLoggerGrain(sessionIdentity);
 
-            await this.logger.Start(request, CancellationToken.None).ConfigureAwait(false);
+            await this.logger.Start(request, CancellationToken.None);
 
             await this.logger.Info(
                 new SessionLogLineItem
                 {
                     Message = $"Starting session based on workbookId '{workbook.Id}'",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             var sessionStateGrain = this.Context.GetSessionStateGrain(sessionIdentity);
-            await sessionStateGrain.Start(request, CancellationToken.None).ConfigureAwait(false);
+            await sessionStateGrain.Start(request, CancellationToken.None);
 
             var blueprints = workbook.Blueprints;
 
@@ -77,21 +77,21 @@ namespace EngineBay.ActorEngine
 
             foreach (var blueprint in workbook.Blueprints)
             {
-                await this.CreateDataVariables(blueprint).ConfigureAwait(false);
-                await this.CreateExpressions(blueprint).ConfigureAwait(false);
-                await this.CreateDataTables(blueprint).ConfigureAwait(false);
-                await this.CreateTriggers(blueprint).ConfigureAwait(false);
+                await this.CreateDataVariables(blueprint);
+                await this.CreateExpressions(blueprint);
+                await this.CreateDataTables(blueprint);
+                await this.CreateTriggers(blueprint);
             }
 
             // Apply default values to the graph, This has to be done at the end of the setup so that initial values can propagate through expressions that depend on them
-            await this.SetDefaultValues(workbook).ConfigureAwait(false);
-            await this.TriggerRootExpressionEvaluations().ConfigureAwait(false);
+            await this.SetDefaultValues(workbook);
+            await this.TriggerRootExpressionEvaluations();
 
             await this.logger.Info(
                 new SessionLogLineItem
                 {
                     Message = $"Session setup complete.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         public override async Task UpdateDataVariable(DataVariable request)
@@ -114,7 +114,7 @@ namespace EngineBay.ActorEngine
                                new SessionLogLineItem
                                {
                                    Message = $"Tried to update a data variable value for a key '{request.Name}' in namespace '{request.Namespace}' that the session had not created.",
-                               }, CancellationToken.None).ConfigureAwait(false);
+                               }, CancellationToken.None);
                 return;
             }
 
@@ -125,13 +125,13 @@ namespace EngineBay.ActorEngine
                    {
                        Value = request.Value,
                    },
-                   CancellationToken.None).ConfigureAwait(false);
+                   CancellationToken.None);
 
             await this.logger.Trace(
                                new SessionLogLineItem
                                {
                                    Message = $"Update a data variable value for a key '{request.Name}' in namespace '{request.Namespace}' with a value of '{request.Value}'.",
-                               }, CancellationToken.None).ConfigureAwait(false);
+                               }, CancellationToken.None);
         }
 
         public override async Task UpdateDataTable(DataTableMsg request)
@@ -154,7 +154,7 @@ namespace EngineBay.ActorEngine
                                new SessionLogLineItem
                                {
                                    Message = $"Tried to update a data table value for a key '{request.Name}' in namespace '{request.Namespace}' that the session had not created.",
-                               }, CancellationToken.None).ConfigureAwait(false);
+                               }, CancellationToken.None);
                 return;
             }
 
@@ -164,13 +164,13 @@ namespace EngineBay.ActorEngine
                 new DataVariableValue
                 {
                     Value = JsonConvert.SerializeObject(request),
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             await this.logger.Trace(
                                new SessionLogLineItem
                                {
                                    Message = $"Update a data table value for a key '{request.Name}' in namespace '{request.Namespace}' with a new value.",
-                               }, CancellationToken.None).ConfigureAwait(false);
+                               }, CancellationToken.None);
         }
 
         public override async Task Stop()
@@ -191,25 +191,25 @@ namespace EngineBay.ActorEngine
                 new SessionLogLineItem
                 {
                     Message = $"Stopping session'",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             foreach (var dataVariableIdentity in this.dataVariableIdentities)
             {
-                await this.Context.GetDataVariableGrain(dataVariableIdentity.Value).Stop(CancellationToken.None).ConfigureAwait(false);
+                await this.Context.GetDataVariableGrain(dataVariableIdentity.Value).Stop(CancellationToken.None);
             }
 
             foreach (var expressionIdentity in this.expressionIdentities)
             {
-                await this.Context.GetExpressionGrain(expressionIdentity).Stop(CancellationToken.None).ConfigureAwait(false);
+                await this.Context.GetExpressionGrain(expressionIdentity).Stop(CancellationToken.None);
             }
 
             foreach (var dataTableIdentity in this.dataTableIdentities)
             {
-                await this.Context.GetDataTableGrain(dataTableIdentity).Stop(CancellationToken.None).ConfigureAwait(false);
+                await this.Context.GetDataTableGrain(dataTableIdentity).Stop(CancellationToken.None);
             }
 
-            await this.Context.GetSessionStateGrain(sessionIdentity).Stop(CancellationToken.None).ConfigureAwait(false);
-            await this.Context.GetSessionLoggerGrain(sessionIdentity).Stop(CancellationToken.None).ConfigureAwait(false);
+            await this.Context.GetSessionStateGrain(sessionIdentity).Stop(CancellationToken.None);
+            await this.Context.GetSessionLoggerGrain(sessionIdentity).Stop(CancellationToken.None);
 
             this.logger = null;
 #pragma warning disable CA1849 // PoisonAsync causes a lockup, uncertain as to why for the moment
@@ -229,7 +229,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            var sessionLogsResponse = await this.logger.GetLogs(CancellationToken.None).ConfigureAwait(false);
+            var sessionLogsResponse = await this.logger.GetLogs(CancellationToken.None);
 
             if (sessionLogsResponse is null)
             {
@@ -250,7 +250,7 @@ namespace EngineBay.ActorEngine
 
             var sessionStateGrain = this.Context.GetSessionStateGrain(sessionIdentity);
 
-            var sessionStateResponse = await sessionStateGrain.GetState(CancellationToken.None).ConfigureAwait(false);
+            var sessionStateResponse = await sessionStateGrain.GetState(CancellationToken.None);
 
             if (sessionStateResponse is null)
             {
@@ -323,7 +323,7 @@ namespace EngineBay.ActorEngine
                     {
                         SessionId = this.sessionId.ToString(),
                     },
-                    CancellationToken.None).ConfigureAwait(false);
+                    CancellationToken.None);
 
                 var expression = BuildTriggerExpression(triggerBlueprint);
 
@@ -337,7 +337,7 @@ namespace EngineBay.ActorEngine
                     {
                         Expression = expression,
                     },
-                    CancellationToken.None).ConfigureAwait(false);
+                    CancellationToken.None);
 
                 var outputDataVariableBlueprint = triggerBlueprint.OutputDataVariableBlueprint;
 
@@ -346,7 +346,7 @@ namespace EngineBay.ActorEngine
                     throw new ArgumentException(nameof(outputDataVariableBlueprint));
                 }
 
-                await this.LinkOutputDataVariable(blueprint, outputDataVariableBlueprint, expressionGrain).ConfigureAwait(false);
+                await this.LinkOutputDataVariable(blueprint, outputDataVariableBlueprint, expressionGrain);
 
                 var inputDataVariableBlueprints = triggerBlueprint.TriggerExpressionBlueprints.Select(x => x.InputDataVariableBlueprint).ToList();
 
@@ -355,14 +355,14 @@ namespace EngineBay.ActorEngine
                     throw new ArgumentException(nameof(inputDataVariableBlueprints));
                 }
 
-                await this.LinkInputDataVariables(blueprint, inputDataVariableBlueprints, expressionGrainIdentity, expressionGrain).ConfigureAwait(false);
+                await this.LinkInputDataVariables(blueprint, inputDataVariableBlueprints, expressionGrainIdentity, expressionGrain);
             }
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Created {triggerBlueprints.Count} triggers from blueprint '{blueprint.Name}'.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task CreateDataTables(BlueprintMsg blueprint)
@@ -391,7 +391,7 @@ namespace EngineBay.ActorEngine
                     {
                         SessionId = this.sessionId.ToString(),
                     },
-                    CancellationToken.None).ConfigureAwait(false);
+                    CancellationToken.None);
 
                 // get the data variable that the datatable will output a dataTableMsg value to
                 var outputDatavariableGrainIdentity = this.TryGetDataVariableGrainIdentity(dataTableBlueprint.Namespace, dataTableBlueprint.Name);
@@ -411,7 +411,7 @@ namespace EngineBay.ActorEngine
                         Namespace = dataTableBlueprint.Namespace,
                         Type = DataVariableTypes.DATATABLE,
                     },
-                    CancellationToken.None).ConfigureAwait(false);
+                    CancellationToken.None);
 
                 // maybe set an initial dataTableMsg value?
                 var dataTableMsg = new DataTableMsg
@@ -469,7 +469,7 @@ namespace EngineBay.ActorEngine
                     Value = JsonConvert.SerializeObject(dataTableMsg),
                 };
 
-                await dataTableGrain.UpdateDataVariable(dataVariableUpdate, CancellationToken.None).ConfigureAwait(false);
+                await dataTableGrain.UpdateDataVariable(dataVariableUpdate, CancellationToken.None);
 
                 // for each data variable that our datatable depends on, get it and make it output to our DataTableGrain
                 foreach (var inputDataVariableBlueprint in dataTableBlueprint.InputDataVariableBlueprints)
@@ -489,21 +489,21 @@ namespace EngineBay.ActorEngine
                    {
                        SessionId = this.sessionId.ToString(),
                    },
-                   CancellationToken.None).ConfigureAwait(false);
+                   CancellationToken.None);
 
                     await inputDataVariableGrain.RegisterDataTableGrainDependant(
                         new GrainIdentity
                         {
                             Identity = dataTableGrainIdentity,
                         },
-                        CancellationToken.None).ConfigureAwait(false);
+                        CancellationToken.None);
                 }
 
                 await this.logger.Trace(
                     new SessionLogLineItem
                     {
                         Message = $"Created DataTableGrain '{dataTableBlueprint.Name}' with {dataTableBlueprint.InputDataVariableBlueprints.Count} dependencies from blueprint '{blueprint.Name}'.",
-                    }, CancellationToken.None).ConfigureAwait(false);
+                    }, CancellationToken.None);
             }
         }
 
@@ -528,14 +528,14 @@ namespace EngineBay.ActorEngine
 
             foreach (var dataVariableBlueprint in dataVariableBlueprints)
             {
-                await this.CreateDataVariable(dataVariableBlueprint).ConfigureAwait(false);
+                await this.CreateDataVariable(dataVariableBlueprint);
             }
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Created {dataVariableBlueprints.Count} data variables from blueprint '{blueprint.Name}'.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task CreateDataVariable(DataVariableBlueprintMsg dataVariableBlueprint)
@@ -550,7 +550,7 @@ namespace EngineBay.ActorEngine
                 {
                     SessionId = this.sessionId.ToString(),
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             await dataVariableGrain.UpdateIdentity(
                 new DataVariableIdentity
@@ -561,7 +561,7 @@ namespace EngineBay.ActorEngine
                     SessionId = this.sessionId?.ToString(),
                     Type = dataVariableBlueprint.Type,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
         }
 
         private async Task CreateExpressions(BlueprintMsg blueprint)
@@ -586,14 +586,14 @@ namespace EngineBay.ActorEngine
             // setup the graph
             foreach (var expressionBlueprint in expressionBlueprints)
             {
-                await this.CreateExpression(blueprint, expressionBlueprint).ConfigureAwait(false);
+                await this.CreateExpression(blueprint, expressionBlueprint);
             }
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Created {expressionBlueprints.Count} expressions from blueprint '{blueprint.Name}'.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task CreateExpression(BlueprintMsg blueprint, ExpressionBlueprintMsg expressionBlueprint)
@@ -615,14 +615,14 @@ namespace EngineBay.ActorEngine
                 {
                     SessionId = this.sessionId.ToString(),
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             await expressionGrain.UseExpression(
                 new UseExpressionRequest
                 {
                     Expression = expressionBlueprint.Expression,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             var outputDataVariableBlueprint = expressionBlueprint.OutputDataVariableBlueprint;
 
@@ -631,7 +631,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(outputDataVariableBlueprint));
             }
 
-            await this.LinkOutputDataVariable(blueprint, outputDataVariableBlueprint, expressionGrain).ConfigureAwait(false);
+            await this.LinkOutputDataVariable(blueprint, outputDataVariableBlueprint, expressionGrain);
 
             var inputDataTableBlueprints = expressionBlueprint.InputDataTableBlueprints;
 
@@ -640,7 +640,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(inputDataTableBlueprints));
             }
 
-            await this.LinkInputDataTables(blueprint, inputDataTableBlueprints, expressionGrainIdentity, expressionGrain).ConfigureAwait(false);
+            await this.LinkInputDataTables(blueprint, inputDataTableBlueprints, expressionGrainIdentity, expressionGrain);
 
             var inputDataVariableBlueprints = expressionBlueprint.InputDataVariableBlueprints;
 
@@ -649,7 +649,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(inputDataVariableBlueprints));
             }
 
-            await this.LinkInputDataVariables(blueprint, inputDataVariableBlueprints, expressionGrainIdentity, expressionGrain).ConfigureAwait(false);
+            await this.LinkInputDataVariables(blueprint, inputDataVariableBlueprints, expressionGrainIdentity, expressionGrain);
         }
 
         private async Task SetDefaultValues(WorkbookMsg? workbook)
@@ -672,17 +672,17 @@ namespace EngineBay.ActorEngine
             foreach (var blueprint in workbook.Blueprints)
             {
                 var dataTableBlueprints = blueprint.DataTableBlueprints;
-                await this.SetDefaultDataTableValues(dataTableBlueprints).ConfigureAwait(false);
+                await this.SetDefaultDataTableValues(dataTableBlueprints);
 
                 var dataVariableBlueprints = blueprint.DataVariableBlueprints;
-                await this.SetDefaultDataVariableValues(dataVariableBlueprints).ConfigureAwait(false);
+                await this.SetDefaultDataVariableValues(dataVariableBlueprints);
             }
 
             await this.logger.Debug(
                 new SessionLogLineItem
                 {
                     Message = $"Set default values for data variables for session.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task TriggerRootExpressionEvaluations()
@@ -696,12 +696,12 @@ namespace EngineBay.ActorEngine
                 new SessionLogLineItem
                 {
                     Message = $"Triggering {this.rootExpressionIdentities.Count} root expressions to kick start propagation.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             foreach (var rootExpressionIdentity in this.rootExpressionIdentities)
             {
                 var expressionGrain = this.Context.GetExpressionGrain(rootExpressionIdentity);
-                await expressionGrain.Evaluate(CancellationToken.None).ConfigureAwait(false); // some technical debt here with the CancellationToken.None, this stuff doesn't seem to propagate between proto.actor message calls?
+                await expressionGrain.Evaluate(CancellationToken.None); // some technical debt here with the CancellationToken.None, this stuff doesn't seem to propagate between proto.actor message calls?
             }
         }
 
@@ -721,7 +721,7 @@ namespace EngineBay.ActorEngine
                         Name = dataVariableBlueprint.Name,
                         Value = dataVariableBlueprint.DefaultValue,
                         Namespace = dataVariableBlueprint.Namespace,
-                    }).ConfigureAwait(false);
+                    });
                 }
             }
         }
@@ -780,7 +780,7 @@ namespace EngineBay.ActorEngine
                         return dataTableRowMsg;
                     }));
 
-                await this.UpdateDataTable(dataTableMsg).ConfigureAwait(false);
+                await this.UpdateDataTable(dataTableMsg);
             }
         }
 
@@ -810,13 +810,13 @@ namespace EngineBay.ActorEngine
                         Namespace = nameSpace,
                         Type = outputDataVariableBlueprint.Type,
                     },
-                    CancellationToken.None).ConfigureAwait(false);
+                    CancellationToken.None);
 
             await this.logger.Trace(
                new SessionLogLineItem
                {
                    Message = $"Created output data {outputDataVariableBlueprint.Type} variable '{name}' in namespace '{nameSpace}'.",
-               }, CancellationToken.None).ConfigureAwait(false);
+               }, CancellationToken.None);
         }
 
         private string GetDataVariableGrainIdentity(string dataVariableNamespace, string? dataVariableName)
@@ -877,14 +877,14 @@ namespace EngineBay.ActorEngine
 
             foreach (var inputDataVariableBlueprint in inputDataVariableBlueprints)
             {
-                await this.LinkInputDataVariable(blueprint, inputDataVariableBlueprint, expressionGrainIdentity, expressionGrain).ConfigureAwait(false);
+                await this.LinkInputDataVariable(blueprint, inputDataVariableBlueprint, expressionGrainIdentity, expressionGrain);
             }
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Created {inputDataVariableBlueprints.Count} input data variables.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task LinkInputDataTables(BlueprintMsg blueprint, ICollection<InputDataTableBlueprintMsg> inputDataTableBlueprints, string expressionGrainIdentity, ExpressionGrainClient expressionGrain)
@@ -896,14 +896,14 @@ namespace EngineBay.ActorEngine
 
             foreach (var inputDataTableBlueprint in inputDataTableBlueprints)
             {
-                await this.LinkInputDataTable(blueprint, inputDataTableBlueprint, expressionGrainIdentity, expressionGrain).ConfigureAwait(false);
+                await this.LinkInputDataTable(blueprint, inputDataTableBlueprint, expressionGrainIdentity, expressionGrain);
             }
 
             await this.logger.Trace(
                 new SessionLogLineItem
                 {
                     Message = $"Created {inputDataTableBlueprints.Count} input data tables.",
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
         }
 
         private async Task LinkInputDataVariable(BlueprintMsg blueprint, InputDataVariableBlueprintMsg inputDataVariableBlueprint, string expressionGrainIdentity, ExpressionGrainClient expressionGrain)
@@ -934,7 +934,7 @@ namespace EngineBay.ActorEngine
                     Namespace = nameSpace,
                     Type = inputDataVariableBlueprint.Type,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             var dataVariableGrainIdentity = this.TryGetDataVariableGrainIdentity(nameSpace, name);
 
@@ -950,13 +950,13 @@ namespace EngineBay.ActorEngine
                 {
                     Identity = expressionGrainIdentity,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             await this.logger.Trace(
             new SessionLogLineItem
             {
                 Message = $"Created input data {inputDataVariableBlueprint.Type} variable '{name}' in namespace '{nameSpace}'.",
-            }, CancellationToken.None).ConfigureAwait(false);
+            }, CancellationToken.None);
         }
 
         private async Task LinkInputDataTable(BlueprintMsg blueprint, InputDataTableBlueprintMsg inputDataTableBlueprint, string expressionGrainIdentity, ExpressionGrainClient expressionGrain)
@@ -982,7 +982,7 @@ namespace EngineBay.ActorEngine
                     Type = DataVariableTypes.DATATABLE,
                     Namespace = dataTableVariablesNamespace,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             var dataVariableGrainIdentity = this.TryGetDataVariableGrainIdentity(dataTableVariablesNamespace, name);
 
@@ -998,13 +998,13 @@ namespace EngineBay.ActorEngine
                 {
                     Identity = expressionGrainIdentity,
                 },
-                CancellationToken.None).ConfigureAwait(false);
+                CancellationToken.None);
 
             await this.logger.Trace(
             new SessionLogLineItem
             {
                 Message = $"Created input data table '{inputDataTableBlueprint.Name}' in namespace '{dataTableVariablesNamespace}'.",
-            }, CancellationToken.None).ConfigureAwait(false);
+            }, CancellationToken.None);
         }
     }
 }

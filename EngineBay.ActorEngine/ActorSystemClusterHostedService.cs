@@ -18,7 +18,7 @@ namespace EngineBay.ActorEngine
 
             await this.actorSystem
                 .Cluster()
-                .StartMemberAsync().ConfigureAwait(false);
+                .StartMemberAsync();
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace EngineBay.ActorEngine
 
             await this.actorSystem
                 .Cluster()
-                .ShutdownAsync().ConfigureAwait(false);
+                .ShutdownAsync();
         }
     }
 }

@@ -2,7 +2,7 @@ namespace EngineBay.ActorEngine
 {
     using System;
     using System.Threading.Tasks;
-    using EngineBay.Core;
+    using EngineBay.Blueprints;
     using Newtonsoft.Json;
     using Proto;
     using Proto.Cluster;
@@ -51,7 +51,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"DataTableGrain '{this.name}' in namespace '{this.nameSpace}' now depends on input data variable '{request.Name}' in namespace '{request.Namespace}' of type '{request.Type}'.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task OutputTo(DataVariableDependantMsg request)
@@ -72,7 +72,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"DataTableGrain '{this.name}' in namespace '{this.nameSpace}' updated to notify data variable '{request.Name}' in namespace '{request.Namespace}' of type '{request.Type}' with results.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
@@ -147,7 +147,7 @@ namespace EngineBay.ActorEngine
                         new SessionLogLineItem
                         {
                             Message = message,
-                        }, CancellationToken.None).ConfigureAwait(false);
+                        }, CancellationToken.None);
                     throw new ArgumentException(message);
             }
 
@@ -155,10 +155,10 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"DataTableGrain '{this.name}' in namespace '{this.nameSpace}' recieved an updated '{name}' data variable in namespace '{nameSpace}' with value '{value}' of type '{type}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             // tell the dependant data variable about the updated DataTable
-            await this.UpdateDependant().ConfigureAwait(false);
+            await this.UpdateDependant();
         }
 
         public override async Task UseSessionLogger(SessionLoggerRequest request)
@@ -179,7 +179,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data table with identity {this.clusterIdentity}' was registered to start logging against sessionId '{request.SessionId}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task Stop()
@@ -193,7 +193,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Data table with identity {this.clusterIdentity}' is being stopped.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             this.logger = null;
 
@@ -220,13 +220,13 @@ namespace EngineBay.ActorEngine
                             new DataVariableValue
                             {
                                 Value = JsonConvert.SerializeObject(this.value),
-                            }, CancellationToken.None).ConfigureAwait(false);
+                            }, CancellationToken.None);
 
                 await this.logger.Trace(
                        new SessionLogLineItem
                        {
                            Message = $"DataTableGrain '{this.name}' in namespace '{this.nameSpace}' has notified dependant of the update.",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
             }
             else
             {
@@ -234,7 +234,7 @@ namespace EngineBay.ActorEngine
                        new SessionLogLineItem
                        {
                            Message = $"DataTableGrain '{this.name}' in namespace '{this.nameSpace}' has no dependants to update.",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
             }
         }
     }

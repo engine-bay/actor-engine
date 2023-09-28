@@ -31,7 +31,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Critical).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Critical);
         }
 
         public override async Task Debug(SessionLogLineItem request)
@@ -41,7 +41,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Debug).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Debug);
         }
 
         public override async Task Error(SessionLogLineItem request)
@@ -51,7 +51,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Error).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Error);
         }
 
         public override async Task Info(SessionLogLineItem request)
@@ -61,7 +61,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Information).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Information);
         }
 
         public override async Task Trace(SessionLogLineItem request)
@@ -71,7 +71,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Trace).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Trace);
         }
 
         public override async Task Warning(SessionLogLineItem request)
@@ -81,7 +81,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentNullException(nameof(request));
             }
 
-            await this.Log(request, LogLevel.Warning).ConfigureAwait(false);
+            await this.Log(request, LogLevel.Warning);
         }
 
         public override async Task Start(SessionStartRequest request)
@@ -97,7 +97,7 @@ namespace EngineBay.ActorEngine
             await this.Info(new SessionLogLineItem
             {
                 Message = $"Starting logger for sessionId '{this.sessionId}'",
-            }).ConfigureAwait(false);
+            });
         }
 
 #pragma warning disable CS1998 // These methods are async on the generated classes from the protobuf definitions, but are not acually async internally.

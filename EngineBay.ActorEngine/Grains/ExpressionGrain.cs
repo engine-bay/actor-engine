@@ -4,7 +4,7 @@ namespace EngineBay.ActorEngine
     using System.Data;
     using System.Globalization;
     using System.Threading.Tasks;
-    using EngineBay.Core;
+    using EngineBay.Blueprints;
     using EngineBay.SheetFunctions;
     using Flee.PublicTypes;
     using Newtonsoft.Json;
@@ -71,7 +71,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Expression '{this.expression}' now depends on input data variable '{request.Name}' in namespace '{request.Namespace}' of type '{request.Type}'.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task OutputTo(DataVariableDependantMsg request)
@@ -92,7 +92,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Expression '{this.expression}' updated to notify data variable '{request.Name}' in namespace '{request.Namespace}' of type '{request.Type}' with results.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
@@ -193,7 +193,7 @@ namespace EngineBay.ActorEngine
                         new SessionLogLineItem
                         {
                             Message = message,
-                        }, CancellationToken.None).ConfigureAwait(false);
+                        }, CancellationToken.None);
                     throw new ArgumentException(message);
             }
 
@@ -201,9 +201,9 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Expression '{this.expression}' recieved an updated '{name}' data variable in namespace '{nameSpace}' with value '{value}' of type '{type}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
-            await this.Evaluate().ConfigureAwait(false);
+            await this.Evaluate();
         }
 
         public override async Task UseExpression(UseExpressionRequest request)
@@ -224,7 +224,7 @@ namespace EngineBay.ActorEngine
                        new SessionLogLineItem
                        {
                            Message = $"Updated expression to '{request.Expression}'",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
         }
 
         public override async Task Evaluate()
@@ -234,7 +234,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (this.compiledExpression is null && await this.InputsAreSatisfied().ConfigureAwait(false))
+            if (this.compiledExpression is null && await this.InputsAreSatisfied())
             {
                 if (this.expressionContext is null)
                 {
@@ -250,7 +250,7 @@ namespace EngineBay.ActorEngine
                        new SessionLogLineItem
                        {
                            Message = $"Expression '{this.expression}' cannot evaluate at this time because the compiledExpression was null.",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
                 return;
             }
 
@@ -261,11 +261,11 @@ namespace EngineBay.ActorEngine
                        new SessionLogLineItem
                        {
                            Message = $"Expression '{this.expression}' evaluated to '{result}'",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
 
             if (result is not null)
             {
-                await this.UpdateDependant(result).ConfigureAwait(false);
+                await this.UpdateDependant(result);
             }
         }
 
@@ -287,7 +287,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Expression with identity {this.clusterIdentity}' was registered to start logging against sessionId '{request.SessionId}'",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
         }
 
         public override async Task Stop()
@@ -301,7 +301,7 @@ namespace EngineBay.ActorEngine
                       new SessionLogLineItem
                       {
                           Message = $"Expression with identity {this.clusterIdentity}' is being stopped.",
-                      }, CancellationToken.None).ConfigureAwait(false);
+                      }, CancellationToken.None);
 
             this.expressionContext = null;
             this.compiledExpression = null;
@@ -329,13 +329,13 @@ namespace EngineBay.ActorEngine
                             new DataVariableValue
                             {
                                 Value = result.ToString(CultureInfo.InvariantCulture),
-                            }, CancellationToken.None).ConfigureAwait(false);
+                            }, CancellationToken.None);
 
                 await this.logger.Trace(
                        new SessionLogLineItem
                        {
                            Message = $"Expression '{this.expression}' has notified it's dependant of updated result.",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
             }
             else
             {
@@ -343,7 +343,7 @@ namespace EngineBay.ActorEngine
                        new SessionLogLineItem
                        {
                            Message = $"Expression '{this.expression}' has no dependant to update.",
-                       }, CancellationToken.None).ConfigureAwait(false);
+                       }, CancellationToken.None);
             }
         }
 
@@ -381,7 +381,7 @@ namespace EngineBay.ActorEngine
                         new SessionLogLineItem
                         {
                             Message = message,
-                        }, CancellationToken.None).ConfigureAwait(false);
+                        }, CancellationToken.None);
                         throw new ArgumentException(message);
                 }
 
@@ -391,7 +391,7 @@ namespace EngineBay.ActorEngine
                         new SessionLogLineItem
                         {
                             Message = $"Dependency '{dependency.Name}' in namespace '{dependency.Namespace}' for expression '{this.expression}' is NOT satisfied.",
-                        }, CancellationToken.None).ConfigureAwait(false);
+                        }, CancellationToken.None);
                     return false;
                 }
             }
@@ -400,7 +400,7 @@ namespace EngineBay.ActorEngine
                new SessionLogLineItem
                {
                    Message = $"{this.dataVariableDependencies.Count} dependencies are satisfied for expression '{this.expression}'.",
-               }, CancellationToken.None).ConfigureAwait(false);
+               }, CancellationToken.None);
 
             return true;
         }

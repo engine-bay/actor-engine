@@ -37,7 +37,7 @@ namespace EngineBay.ActorEngine
 
         public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation)
         {
-            var user = await this.getApplicationUserQuery.Handle(claimsPrincipal, cancellation).ConfigureAwait(false);
+            var user = await this.getApplicationUserQuery.Handle(claimsPrincipal, cancellation);
 
             if (createEvaluationDto is null)
             {
@@ -80,7 +80,7 @@ namespace EngineBay.ActorEngine
                         .ThenInclude(x => x.DataTableRowBlueprints)
                             .ThenInclude(x => x.DataTableCellBlueprints)
                 .FirstOrDefaultAsync(x => x.Id == createEvaluationDto.WorkbookId, cancellation)
-                .ConfigureAwait(false);
+                ;
 
             if (workbook is null)
             {
@@ -100,7 +100,7 @@ namespace EngineBay.ActorEngine
                         SessionId = identity,
                         LogLevel = (int)createEvaluationDto.LogLevel,
                         Workbook = workbookMsg,
-                    }, cancellation).ConfigureAwait(false);
+                    }, cancellation);
 
             // Set the  session's variables and then things calculate
             if (createEvaluationDto.DataVariables is not null)
@@ -113,11 +113,11 @@ namespace EngineBay.ActorEngine
                         Name = dataVariable.Name,
                         Value = dataVariable.Value,
                         Namespace = dataVariable.Namespace,
-                    }, cancellation).ConfigureAwait(false);
+                    }, cancellation);
                 }
             }
 
-            var sessionLogsResponse = await sessionGrain.GetLogs(cancellation).ConfigureAwait(false);
+            var sessionLogsResponse = await sessionGrain.GetLogs(cancellation);
 
             if (sessionLogsResponse is null)
             {
@@ -128,7 +128,7 @@ namespace EngineBay.ActorEngine
 
             this.actorDb.SessionLogs.AddRange(sessionLogs);
 
-            var sessionStateResponse = await sessionGrain.GetState(cancellation).ConfigureAwait(false);
+            var sessionStateResponse = await sessionGrain.GetState(cancellation);
 
             if (sessionStateResponse is null)
             {
@@ -139,9 +139,9 @@ namespace EngineBay.ActorEngine
 
             this.actorDb.DataVariableStates.AddRange(dataVariableStates);
 
-            await this.actorDb.SaveChangesAsync(user, cancellation).ConfigureAwait(false);
+            await this.actorDb.SaveChangesAsync(user, cancellation);
 
-            await sessionGrain.Stop(cancellation).ConfigureAwait(false);
+            await sessionGrain.Stop(cancellation);
 
             return new EvaluationResultDto
             {

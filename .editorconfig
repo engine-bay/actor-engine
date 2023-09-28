@@ -24,6 +24,10 @@ dotnet_diagnostic.CA2227.severity = silent
 # https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca1725
 dotnet_diagnostic.CA1725.severity = silent
 
+# https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/ca2007
+# for .net core apps, ConfigureAwait(false) has no effect as there is no SynchronizationContext
+dotnet_diagnostic.CA2007.severity = silent
+
 # Treat all cs files in this folder as generated code
 [**/obj/**/*.cs]
 generated_code = true

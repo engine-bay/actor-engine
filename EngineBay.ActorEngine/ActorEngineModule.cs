@@ -8,9 +8,9 @@ namespace EngineBay.ActorEngine
     using Proto;
     using Proto.Remote.HealthChecks;
 
-    public class ActorEngineModule : IModule
+    public class ActorEngineModule : BaseModule
     {
-        public IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
+        public override IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
         {
             // Register commands
             services.AddTransient<RunEvaluation>();
@@ -34,18 +34,18 @@ namespace EngineBay.ActorEngine
             return services;
         }
 
-        public IEndpointRouteBuilder MapEndpoints(IEndpointRouteBuilder endpoints)
+        public override RouteGroupBuilder MapEndpoints(RouteGroupBuilder endpoints)
         {
             endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation) =>
             {
-                var dto = await command.Handle(createEvaluationDto, claimsPrincipal, cancellation).ConfigureAwait(false);
+                var dto = await command.Handle(createEvaluationDto, claimsPrincipal, cancellation);
                 return Results.Ok(dto);
             }).RequireAuthorization();
 
             return endpoints;
         }
 
-        public WebApplication AddMiddleware(WebApplication app)
+        public override WebApplication AddMiddleware(WebApplication app)
         {
             if (app is null)
             {

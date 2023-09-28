@@ -19,7 +19,7 @@ namespace EngineApi.Tests
             await this.ActorSystem
             .Cluster()
             .StartMemberAsync()
-            .ConfigureAwait(false);
+            ;
 
             var sessionId = Guid.NewGuid().ToString();
             var workbookId = Guid.NewGuid().ToString();
@@ -29,7 +29,7 @@ namespace EngineApi.Tests
                 {
                     SessionId = sessionId,
                     LogLevel = (int)LogLevel.Trace,
-                }, CancellationToken.None).ConfigureAwait(false);
+                }, CancellationToken.None);
 
             var dataVariableGrain = this.ActorSystem
                     .Cluster()
@@ -40,10 +40,10 @@ namespace EngineApi.Tests
                         {
                             SessionId = sessionId.ToString(),
                         },
-                        CancellationToken.None).ConfigureAwait(false);
+                        CancellationToken.None);
 
             var result = await dataVariableGrain.GetValue(CancellationToken.None)
-                    .ConfigureAwait(false);
+                    ;
 
             Assert.NotNull(result);
             Assert.Equal(string.Empty, result.Value);
