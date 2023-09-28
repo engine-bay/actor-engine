@@ -29,7 +29,7 @@
 
   <ItemGroup>
     <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.16" />
-    <PackageReference Include="EngineBay.Blueprints" Version="1.0.0" />
+    <PackageReference Include="EngineBay.Blueprints" Version="1.0.1" />
     <PackageReference Include="EngineBay.DataProtection" Version="1.0.0" />
     <PackageReference Include="Flee" Version="2.0.0" />
     <PackageReference Include="UnitsNet" Version="5.31.0" />
