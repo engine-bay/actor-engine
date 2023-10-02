@@ -32,7 +32,7 @@ jobs:
         dotnet-version: 7.0.x
     - run: dotnet tool restore
     - run: dotnet build -c release
-    - run: dotnet coverage collect dotnet test --output ./output.cobertura.xml --output-format cobertura
+    - run: dotnet coverage collect dotnet test -c release --output ./output.cobertura.xml --output-format cobertura
     - run: dotnet reportgenerator -reports:./output.cobertura.xml -targetdir:"." -reporttypes:Clover -assemblyfilters:"-Protobuf.MSBuild;-protobuf-net.Reflection;-protobuf-net.Core;-ProtoBuf;-FluentValidation;-Humanizer;-OidcClient;-IdentityModel.OidcClient;-Microsoft.TestPlatform*;-Microsoft.VisualStudio*;-xunit*;-Pipelines.Sockets*;-StackExchange.Redis*;"
     - uses: paambaati/codeclimate-action@v3.2.0
       env:
