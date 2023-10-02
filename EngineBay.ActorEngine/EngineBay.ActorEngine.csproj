@@ -32,7 +32,7 @@
     <PackageReference Include="EngineBay.Blueprints" Version="1.0.1" />
     <PackageReference Include="EngineBay.DataProtection" Version="1.0.0" />
     <PackageReference Include="Flee" Version="2.0.0" />
-    <PackageReference Include="UnitsNet" Version="5.31.0" />
+    <PackageReference Include="UnitsNet" Version="5.34.0" />
     <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
