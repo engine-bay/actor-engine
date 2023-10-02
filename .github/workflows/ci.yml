@@ -17,9 +17,9 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore /p:Configuration=Release
+      run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c release
+      run: dotnet build --no-restore
   test:
     needs: [ build ]
     name: Test
@@ -31,8 +31,8 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - run: dotnet tool restore
-    - run: dotnet build -c release
-    - run: dotnet coverage collect dotnet test -c release --output ./output.cobertura.xml --output-format cobertura
+    - run: dotnet build
+    - run: dotnet coverage collect dotnet test --output ./output.cobertura.xml --output-format cobertura
     - run: dotnet reportgenerator -reports:./output.cobertura.xml -targetdir:"." -reporttypes:Clover -assemblyfilters:"-Protobuf.MSBuild;-protobuf-net.Reflection;-protobuf-net.Core;-ProtoBuf;-FluentValidation;-Humanizer;-OidcClient;-IdentityModel.OidcClient;-Microsoft.TestPlatform*;-Microsoft.VisualStudio*;-xunit*;-Pipelines.Sockets*;-StackExchange.Redis*;"
     - uses: paambaati/codeclimate-action@v3.2.0
       env:
@@ -58,8 +58,8 @@ jobs:
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
-    - name: Release Build
-      run: dotnet build -c release
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
