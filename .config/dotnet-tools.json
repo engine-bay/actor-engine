@@ -4,15 +4,11 @@
   "tools": {
     "dotnet-reportgenerator-globaltool": {
       "version": "5.1.25",
-      "commands": [
-        "reportgenerator"
-      ]
+      "commands": ["reportgenerator"]
     },
     "dotnet-coverage": {
       "version": "17.8.6",
-      "commands": [
-        "dotnet-coverage"
-      ]
+      "commands": ["dotnet-coverage"]
     }
   }
 }
