@@ -41,7 +41,7 @@
         <Otherwise>
             <ItemGroup>
                 <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.16" />
-                <PackageReference Include="EngineBay.Blueprints" Version="1.0.1" />
+                <PackageReference Include="EngineBay.Blueprints" Version="1.1.0" />
                 <PackageReference Include="EngineBay.DataProtection" Version="1.0.0" />
             </ItemGroup>
         </Otherwise>
