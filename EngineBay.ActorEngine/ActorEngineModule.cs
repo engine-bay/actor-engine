@@ -1,7 +1,6 @@
 namespace EngineBay.ActorEngine
 {
     using System;
-    using System.Security.Claims;
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
@@ -36,9 +35,9 @@ namespace EngineBay.ActorEngine
 
         public override RouteGroupBuilder MapEndpoints(RouteGroupBuilder endpoints)
         {
-            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation) =>
+            endpoints.MapPost("/evaluations", async (RunEvaluation command, CreateEvaluationDto createEvaluationDto, CancellationToken cancellation) =>
             {
-                var dto = await command.Handle(createEvaluationDto, claimsPrincipal, cancellation);
+                var dto = await command.Handle(createEvaluationDto, cancellation);
                 return Results.Ok(dto);
             }).RequireAuthorization();
 

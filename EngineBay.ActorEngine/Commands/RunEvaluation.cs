@@ -1,6 +1,5 @@
 namespace EngineBay.ActorEngine
 {
-    using System.Security.Claims;
     using EngineBay.Authentication;
     using EngineBay.Blueprints;
     using EngineBay.Core;
@@ -35,10 +34,8 @@ namespace EngineBay.ActorEngine
             this.dataProtectionProvider = dataProtectionProvider;
         }
 
-        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, ClaimsPrincipal claimsPrincipal, CancellationToken cancellation)
+        public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, CancellationToken cancellation)
         {
-            var user = await this.getApplicationUserQuery.Handle(claimsPrincipal, cancellation);
-
             if (createEvaluationDto is null)
             {
                 throw new ArgumentNullException(nameof(createEvaluationDto));
@@ -139,7 +136,7 @@ namespace EngineBay.ActorEngine
 
             this.actorDb.DataVariableStates.AddRange(dataVariableStates);
 
-            await this.actorDb.SaveChangesAsync(user, cancellation);
+            await this.actorDb.SaveChangesAsync(cancellation);
 
             await sessionGrain.Stop(cancellation);
 
