@@ -4,10 +4,11 @@ namespace EngineBay.ActorEngine
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
+    using Microsoft.EntityFrameworkCore;
     using Proto;
     using Proto.Remote.HealthChecks;
 
-    public class ActorEngineModule : BaseModule
+    public class ActorEngineModule : BaseModule, IDatabaseModule
     {
         public override IServiceCollection RegisterModule(IServiceCollection services, IConfiguration configuration)
         {
@@ -55,6 +56,11 @@ namespace EngineBay.ActorEngine
             Log.SetLoggerFactory(loggerFactory);
 
             return app;
+        }
+
+        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(DbContextOptions<ModuleWriteDbContext> dbOptions)
+        {
+            return new IModuleDbContext[] { new ActorEngineDbContext(dbOptions) };
         }
     }
 }
