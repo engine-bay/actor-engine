@@ -40,9 +40,9 @@
         </When>
         <Otherwise>
             <ItemGroup>
-                <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.16" />
-                <PackageReference Include="EngineBay.Blueprints" Version="1.1.4" />
-                <PackageReference Include="EngineBay.DataProtection" Version="1.0.3" />
+                <PackageReference Include="EngineBay.SheetFunctions" Version="0.0.19" />
+                <PackageReference Include="EngineBay.Blueprints" Version="1.2.0" />
+                <PackageReference Include="EngineBay.DataProtection" Version="1.1.0" />
             </ItemGroup>
         </Otherwise>
     </Choose>
