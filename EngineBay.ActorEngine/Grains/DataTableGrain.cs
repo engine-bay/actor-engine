@@ -1,6 +1,7 @@
 namespace EngineBay.ActorEngine
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using EngineBay.Blueprints;
     using Newtonsoft.Json;
@@ -17,7 +18,7 @@ namespace EngineBay.ActorEngine
 
         private DataTableMsg value;
 
-        private ICollection<DataVariableDependency> dataVariableDependencies;
+        private Collection<DataVariableDependency> dataVariableDependencies;
 
         private DataVariableDependantMsg? outputDataVariable;
 
@@ -30,15 +31,12 @@ namespace EngineBay.ActorEngine
             this.name = string.Empty;
             this.nameSpace = string.Empty;
             this.value = new DataTableMsg();
-            this.dataVariableDependencies = new List<DataVariableDependency>();
+            this.dataVariableDependencies = new Collection<DataVariableDependency>();
         }
 
         public override async Task DependOn(DataVariableDependency request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -56,10 +54,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task OutputTo(DataVariableDependantMsg request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -77,10 +72,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -163,10 +155,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UseSessionLogger(SessionLoggerRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.logger = this.Context.GetSessionLoggerGrain(request.SessionId.ToString());
 

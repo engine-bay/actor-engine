@@ -6,10 +6,7 @@ namespace EngineBay.ActorEngine
     {
         public DataVariableStateDto(DataVariableState dataVariableState, IDataProtectionProvider dataProtectionProvider)
         {
-            if (dataVariableState is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableState));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableState);
 
             this.Id = dataVariableState.Id;
             this.Identity = dataVariableState.Identity;

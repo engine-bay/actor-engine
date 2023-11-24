@@ -14,7 +14,7 @@ namespace EngineBay.ActorEngine
 
         private LogLevel logLevel;
 
-        private ICollection<SessionLogMsg> sessionLogs;
+        private Collection<SessionLogMsg> sessionLogs;
 
         public SessionLoggerGrain(IContext context, ClusterIdentity clusterIdentity)
             : base(context)
@@ -26,70 +26,49 @@ namespace EngineBay.ActorEngine
 
         public override async Task Critical(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Critical);
         }
 
         public override async Task Debug(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Debug);
         }
 
         public override async Task Error(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Error);
         }
 
         public override async Task Info(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Information);
         }
 
         public override async Task Trace(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Trace);
         }
 
         public override async Task Warning(SessionLogLineItem request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             await this.Log(request, LogLevel.Warning);
         }
 
         public override async Task Start(SessionStartRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.sessionId = new Guid(request.SessionId);
             this.logLevel = (LogLevel)request.LogLevel;
