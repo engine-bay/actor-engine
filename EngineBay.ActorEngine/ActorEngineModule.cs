@@ -47,10 +47,7 @@ namespace EngineBay.ActorEngine
 
         public override WebApplication AddMiddleware(WebApplication app)
         {
-            if (app is null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
+            ArgumentNullException.ThrowIfNull(app);
 
             var loggerFactory = app.Services.GetRequiredService<ILoggerFactory>();
             Log.SetLoggerFactory(loggerFactory);

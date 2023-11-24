@@ -9,10 +9,7 @@ namespace EngineBay.ActorEngine
         // We probably need the Grains.proto and Messages.proto generation moved to EngineBay.Core if we want the mapping logic to live on the Models again?
         public static WorkbookMsg Map(Workbook workbook)
         {
-            if (workbook is null)
-            {
-                throw new ArgumentNullException(nameof(workbook));
-            }
+            ArgumentNullException.ThrowIfNull(workbook);
 
             // Todo - yoh...this mapping horrid....clean it up!
             var workbookMsg = new WorkbookMsg

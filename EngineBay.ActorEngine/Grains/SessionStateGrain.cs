@@ -24,10 +24,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task Start(SessionStartRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.sessionId = new Guid(request.SessionId);
 
@@ -44,10 +41,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             var key = $"{request.Namespace}_{request.Name}";
 

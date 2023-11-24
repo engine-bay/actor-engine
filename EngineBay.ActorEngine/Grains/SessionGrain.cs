@@ -19,11 +19,11 @@ namespace EngineBay.ActorEngine
 
         private Dictionary<string, string> dataVariableIdentities;
 
-        private ICollection<string> rootExpressionIdentities;
+        private Collection<string> rootExpressionIdentities;
 
-        private ICollection<string> expressionIdentities;
+        private Collection<string> expressionIdentities;
 
-        private ICollection<string> dataTableIdentities;
+        private Collection<string> dataTableIdentities;
 
         private SessionLoggerGrainClient? logger;
 
@@ -39,10 +39,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task Start(SessionStartRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.sessionId = new Guid(request.SessionId);
 
@@ -96,10 +93,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateDataVariable(DataVariable request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -136,10 +130,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateDataTable(DataTableMsg request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -262,10 +253,7 @@ namespace EngineBay.ActorEngine
 
         private static string BuildTriggerExpression(TriggerBlueprintMsg? triggerBlueprint)
         {
-            if (triggerBlueprint is null)
-            {
-                throw new ArgumentNullException(nameof(triggerBlueprint));
-            }
+            ArgumentNullException.ThrowIfNull(triggerBlueprint);
 
             if (triggerBlueprint.TriggerExpressionBlueprints.Count == 1)
             {
@@ -298,10 +286,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (blueprint is null)
-            {
-                throw new ArgumentNullException(nameof(blueprint));
-            }
+            ArgumentNullException.ThrowIfNull(blueprint);
 
             var triggerBlueprints = blueprint.TriggerBlueprints;
 
@@ -372,10 +357,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (blueprint is null)
-            {
-                throw new ArgumentNullException(nameof(blueprint));
-            }
+            ArgumentNullException.ThrowIfNull(blueprint);
 
             foreach (var dataTableBlueprint in blueprint.DataTableBlueprints)
             {
@@ -514,10 +496,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (blueprint is null)
-            {
-                throw new ArgumentNullException(nameof(blueprint));
-            }
+            ArgumentNullException.ThrowIfNull(blueprint);
 
             var dataVariableBlueprints = blueprint.DataVariableBlueprints;
 
@@ -571,10 +550,7 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (blueprint is null)
-            {
-                throw new ArgumentNullException(nameof(blueprint));
-            }
+            ArgumentNullException.ThrowIfNull(blueprint);
 
             var expressionBlueprints = blueprint.ExpressionBlueprints;
 
@@ -659,10 +635,8 @@ namespace EngineBay.ActorEngine
                 throw new ArgumentException(nameof(this.logger));
             }
 
-            if (workbook is null)
-            {
-                throw new ArgumentNullException(nameof(workbook));
-            }
+            ArgumentNullException.ThrowIfNull(workbook);
+            ArgumentNullException.ThrowIfNull(workbook.Blueprints);
 
             if (workbook.Blueprints is null)
             {
@@ -707,10 +681,7 @@ namespace EngineBay.ActorEngine
 
         private async Task SetDefaultDataVariableValues(RepeatedField<DataVariableBlueprintMsg>? dataVariableBlueprints)
         {
-            if (dataVariableBlueprints is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableBlueprints));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableBlueprints);
 
             foreach (var dataVariableBlueprint in dataVariableBlueprints)
             {
@@ -728,10 +699,7 @@ namespace EngineBay.ActorEngine
 
         private async Task SetDefaultDataTableValues(RepeatedField<DataTableBlueprintMsg>? dataTableBlueprints)
         {
-            if (dataTableBlueprints is null)
-            {
-                throw new ArgumentNullException(nameof(dataTableBlueprints));
-            }
+            ArgumentNullException.ThrowIfNull(dataTableBlueprints);
 
             foreach (var dataTableBlueprint in dataTableBlueprints)
             {
@@ -821,15 +789,8 @@ namespace EngineBay.ActorEngine
 
         private string GetDataVariableGrainIdentity(string dataVariableNamespace, string? dataVariableName)
         {
-            if (dataVariableNamespace is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableNamespace));
-            }
-
-            if (dataVariableName is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableName));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableNamespace);
+            ArgumentNullException.ThrowIfNull(dataVariableName);
 
             // Try check if we have and identity for a data variable of this name already
             var dataVariableGrainIdentity = string.Empty;
@@ -845,15 +806,8 @@ namespace EngineBay.ActorEngine
 
         private string? TryGetDataVariableGrainIdentity(string dataVariableNamespace, string? dataVariableName)
         {
-            if (dataVariableNamespace is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableNamespace));
-            }
-
-            if (dataVariableName is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableName));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableNamespace);
+            ArgumentNullException.ThrowIfNull(dataVariableName);
 
             var fullyQualifiedDataVariableName = dataVariableNamespace + "_" + dataVariableName;
             var dataVariableIdentity = string.Empty;

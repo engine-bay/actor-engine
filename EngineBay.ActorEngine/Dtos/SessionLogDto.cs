@@ -6,10 +6,7 @@ namespace EngineBay.ActorEngine
     {
         public SessionLogDto(SessionLog sessionLog, IDataProtectionProvider dataProtectionProvider)
         {
-            if (sessionLog is null)
-            {
-                throw new ArgumentNullException(nameof(sessionLog));
-            }
+            ArgumentNullException.ThrowIfNull(sessionLog);
 
             this.Message = sessionLog.GetMessage(dataProtectionProvider);
         }

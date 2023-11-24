@@ -1,6 +1,7 @@
 namespace EngineBay.ActorEngine
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.Data;
     using System.Globalization;
     using System.Threading.Tasks;
@@ -28,7 +29,7 @@ namespace EngineBay.ActorEngine
 
         private Dictionary<string, DataTable> dataTablesDataVariables;
 
-        private ICollection<DataVariableDependency> dataVariableDependencies;
+        private Collection<DataVariableDependency> dataVariableDependencies;
 
         private DataVariableDependantMsg? outputDataVariable;
 
@@ -45,7 +46,7 @@ namespace EngineBay.ActorEngine
             this.boolDataVariables = new Dictionary<string, bool>();
             this.dateTimeDataVariables = new Dictionary<string, DateTime>();
             this.dataTablesDataVariables = new Dictionary<string, DataTable>();
-            this.dataVariableDependencies = new List<DataVariableDependency>();
+            this.dataVariableDependencies = new Collection<DataVariableDependency>();
 
             this.expressionContext.Imports.AddType(typeof(Math));
             this.expressionContext.Imports.AddType(typeof(DateTime));
@@ -55,10 +56,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task DependOn(DataVariableDependency request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -76,10 +74,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task OutputTo(DataVariableDependantMsg request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -97,10 +92,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateDataVariable(DataVariableUpdate request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.expressionContext is null)
             {
@@ -208,10 +200,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UseExpression(UseExpressionRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -271,10 +260,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UseSessionLogger(SessionLoggerRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.logger = this.Context.GetSessionLoggerGrain(request.SessionId.ToString());
 

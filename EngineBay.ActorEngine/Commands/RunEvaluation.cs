@@ -36,10 +36,7 @@ namespace EngineBay.ActorEngine
 
         public async Task<EvaluationResultDto> Handle(CreateEvaluationDto createEvaluationDto, CancellationToken cancellation)
         {
-            if (createEvaluationDto is null)
-            {
-                throw new ArgumentNullException(nameof(createEvaluationDto));
-            }
+            ArgumentNullException.ThrowIfNull(createEvaluationDto);
 
             this.validator.ValidateAndThrow(createEvaluationDto);
 

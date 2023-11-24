@@ -1,6 +1,7 @@
 namespace EngineBay.ActorEngine
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Threading.Tasks;
     using Proto;
@@ -22,8 +23,8 @@ namespace EngineBay.ActorEngine
 
         private string value;
 
-        private ICollection<string> dependentExpressionGrains;
-        private ICollection<string> dependentDataTableGrains;
+        private Collection<string> dependentExpressionGrains;
+        private Collection<string> dependentDataTableGrains;
 
         private SessionLoggerGrainClient? logger;
 
@@ -35,8 +36,8 @@ namespace EngineBay.ActorEngine
             this.nameSpace = string.Empty;
             this.value = string.Empty;
             this.type = string.Empty;
-            this.dependentExpressionGrains = new List<string>();
-            this.dependentDataTableGrains = new List<string>();
+            this.dependentExpressionGrains = new Collection<string>();
+            this.dependentDataTableGrains = new Collection<string>();
         }
 
         public override Task<DataVariableValue> GetValue()
@@ -49,10 +50,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task RegisterExpressionGrainDependant(GrainIdentity request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.dependentExpressionGrains.Add(request.Identity);
 
@@ -70,10 +68,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task RegisterDataTableGrainDependant(GrainIdentity request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.dependentDataTableGrains.Add(request.Identity);
 
@@ -91,10 +86,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateValue(DataVariableValue request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             if (this.logger is null)
             {
@@ -126,10 +118,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UpdateIdentity(DataVariableIdentity request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.identity = new Guid(request.Identity);
             this.sessionId = new Guid(request.SessionId);
@@ -141,10 +130,7 @@ namespace EngineBay.ActorEngine
 
         public override async Task UseSessionLogger(SessionLoggerRequest request)
         {
-            if (request is null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            ArgumentNullException.ThrowIfNull(request);
 
             this.logger = this.Context.GetSessionLoggerGrain(request.SessionId.ToString());
 
@@ -221,15 +207,9 @@ namespace EngineBay.ActorEngine
 
         private async Task SaveState()
         {
-            if (this.identity is null)
-            {
-                throw new ArgumentNullException(nameof(this.identity));
-            }
+            ArgumentNullException.ThrowIfNull(this.identity);
 
-            if (this.sessionId is null)
-            {
-                throw new ArgumentNullException(nameof(this.sessionId));
-            }
+            ArgumentNullException.ThrowIfNull(this.sessionId);
 
             var sessionIdentity = this.sessionId.ToString();
 

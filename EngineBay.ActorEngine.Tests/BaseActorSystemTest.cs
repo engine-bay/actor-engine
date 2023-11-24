@@ -98,8 +98,8 @@ namespace EngineApi.Tests
 
         public ValueTask DisposeAsync()
         {
-            this.BlueprintsDb.Database.EnsureDeleted();
-            this.ActorDb.Database.EnsureDeleted();
+            this.BlueprintsDb.Database.EnsureDeletedAsync();
+            this.ActorDb.Database.EnsureDeletedAsync();
             GC.SuppressFinalize(this);
             this.BlueprintsDb.Dispose();
             this.ActorDb.Dispose();
