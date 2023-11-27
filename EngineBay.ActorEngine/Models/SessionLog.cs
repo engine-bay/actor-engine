@@ -10,10 +10,7 @@ namespace EngineBay.ActorEngine
     {
         public SessionLog(SessionLogMsg sessionLogMsg, IDataProtectionProvider dataProtectionProvider)
         {
-            if (sessionLogMsg is null)
-            {
-                throw new ArgumentNullException(nameof(sessionLogMsg));
-            }
+            ArgumentNullException.ThrowIfNull(sessionLogMsg);
 
             this.SessionId = new Guid(sessionLogMsg.SessionId);
             this.LogLevel = (LogLevel)sessionLogMsg.LogLevel;
@@ -32,10 +29,7 @@ namespace EngineBay.ActorEngine
 
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
         {
-            if (modelBuilder is null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder));
-            }
+            ArgumentNullException.ThrowIfNull(modelBuilder);
 
             modelBuilder.Entity<SessionLog>().ToTable(typeof(SessionLog).Name.Pluralize());
 
@@ -56,10 +50,7 @@ namespace EngineBay.ActorEngine
 
         public string GetMessage(IDataProtectionProvider dataProtectionProvider)
         {
-            if (dataProtectionProvider is null)
-            {
-                throw new ArgumentNullException(nameof(dataProtectionProvider));
-            }
+            ArgumentNullException.ThrowIfNull(dataProtectionProvider);
 
             if (this.EncryptedMessage is null)
             {
@@ -78,10 +69,7 @@ namespace EngineBay.ActorEngine
                 return;
             }
 
-            if (dataProtectionProvider is null)
-            {
-                throw new ArgumentNullException(nameof(dataProtectionProvider));
-            }
+            ArgumentNullException.ThrowIfNull(dataProtectionProvider);
 
             var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.SessionLogMessage);
 

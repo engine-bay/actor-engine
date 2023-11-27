@@ -6,10 +6,7 @@ namespace EngineBay.ActorEngine
     {
         public EvaluationDataVariableStateDto(DataVariableState dataVariableState, IDataProtectionProvider dataProtectionProvider)
         {
-            if (dataVariableState is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableState));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableState);
 
             this.Name = dataVariableState.Name;
             this.Namespace = dataVariableState.Namespace;

@@ -15,7 +15,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -29,12 +29,12 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 7.0.x
+        dotnet-version: 8.0.x
     - run: dotnet tool restore
     - run: dotnet build
     - run: dotnet coverage collect dotnet test --output ./output.cobertura.xml --output-format cobertura
     - run: dotnet reportgenerator -reports:./output.cobertura.xml -targetdir:"." -reporttypes:Clover -assemblyfilters:"-Protobuf.MSBuild;-protobuf-net.Reflection;-protobuf-net.Core;-ProtoBuf;-FluentValidation;-Humanizer;-OidcClient;-IdentityModel.OidcClient;-Microsoft.TestPlatform*;-Microsoft.VisualStudio*;-xunit*;-Pipelines.Sockets*;-StackExchange.Redis*;"
-    - uses: paambaati/codeclimate-action@v3.2.0
+    - uses: paambaati/codeclimate-action@v5.0.0
       env:
         CC_TEST_REPORTER_ID: cc4476c9b89c71fd38a9e820879f8fa2fe92bba07581305b64ad59c30362a3bc
       with:

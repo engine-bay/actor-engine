@@ -10,10 +10,7 @@ namespace EngineBay.ActorEngine
     {
         public DataVariableState(DataVariableStateMsg dataVariableStateMsg, IDataProtectionProvider dataProtectionProvider)
         {
-            if (dataVariableStateMsg is null)
-            {
-                throw new ArgumentNullException(nameof(dataVariableStateMsg));
-            }
+            ArgumentNullException.ThrowIfNull(dataVariableStateMsg);
 
             this.Identity = new Guid(dataVariableStateMsg.Identity);
             this.SessionId = new Guid(dataVariableStateMsg.SessionId);
@@ -41,10 +38,7 @@ namespace EngineBay.ActorEngine
 
         public static new void CreateDataAnnotations(ModelBuilder modelBuilder)
         {
-            if (modelBuilder is null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder));
-            }
+            ArgumentNullException.ThrowIfNull(modelBuilder);
 
             modelBuilder.Entity<DataVariableState>().ToTable(typeof(DataVariableState).Name.Pluralize());
 
@@ -65,10 +59,7 @@ namespace EngineBay.ActorEngine
 
         public string GetValue(IDataProtectionProvider dataProtectionProvider)
         {
-            if (dataProtectionProvider is null)
-            {
-                throw new ArgumentNullException(nameof(dataProtectionProvider));
-            }
+            ArgumentNullException.ThrowIfNull(dataProtectionProvider);
 
             if (this.EncryptedValue is null)
             {
@@ -87,10 +78,7 @@ namespace EngineBay.ActorEngine
                 return;
             }
 
-            if (dataProtectionProvider is null)
-            {
-                throw new ArgumentNullException(nameof(dataProtectionProvider));
-            }
+            ArgumentNullException.ThrowIfNull(dataProtectionProvider);
 
             var dataProtector = dataProtectionProvider.CreateProtector(ProtectedDataConstants.DataVariableStateValue);
 
