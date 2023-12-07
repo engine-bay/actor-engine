@@ -1,6 +1,5 @@
 namespace EngineBay.ActorEngine
 {
-    using EngineBay.Authentication;
     using EngineBay.Blueprints;
     using EngineBay.Core;
     using FluentValidation;
@@ -16,17 +15,14 @@ namespace EngineBay.ActorEngine
         private readonly ActorSystem actorSystem;
         private readonly IValidator<CreateEvaluationDto> validator;
         private readonly IDataProtectionProvider dataProtectionProvider;
-        private readonly GetApplicationUser getApplicationUserQuery;
 
         public RunEvaluation(
-            GetApplicationUser getApplicationUserQuery,
             ActorEngineWriteDbContext actorDb,
             BlueprintsQueryDbContext blueprintsDb,
             ActorSystem actorSystem,
             IValidator<CreateEvaluationDto> validator,
             IDataProtectionProvider dataProtectionProvider)
         {
-            this.getApplicationUserQuery = getApplicationUserQuery;
             this.actorDb = actorDb;
             this.blueprintsDb = blueprintsDb;
             this.actorSystem = actorSystem;
