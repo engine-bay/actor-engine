@@ -5,7 +5,7 @@ namespace EngineApi.Tests
     using EngineBay.Blueprints;
     using EngineBay.Persistence;
     using Microsoft.EntityFrameworkCore;
-    using Moq;
+    using NSubstitute;
     using Proto;
     using Proto.Cluster;
     using Proto.Cluster.Partition;
@@ -16,7 +16,7 @@ namespace EngineApi.Tests
     {
         protected BaseActorSystemTest()
         {
-            var mockProvider = new Mock<IServiceProvider>();
+            var mockProvider = Substitute.For<IServiceProvider>();
 
             var blueprintsDbOptions = new DbContextOptionsBuilder<ModuleWriteDbContext>()
                 .UseInMemoryDatabase(databaseName: "BlueprintsDb")
