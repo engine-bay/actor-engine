@@ -1,7 +1,7 @@
 namespace EngineBay.ActorEngine
 {
     using System;
-    using EngineBay.Core;
+    using EngineBay.Persistence;
     using Humanizer;
     using Microsoft.AspNetCore.DataProtection;
     using Microsoft.EntityFrameworkCore;
