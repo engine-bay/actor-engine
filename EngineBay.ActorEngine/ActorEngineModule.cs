@@ -4,7 +4,6 @@ namespace EngineBay.ActorEngine
     using EngineBay.Core;
     using EngineBay.Persistence;
     using FluentValidation;
-    using Microsoft.EntityFrameworkCore;
     using Proto;
     using Proto.Remote.HealthChecks;
 
@@ -55,9 +54,10 @@ namespace EngineBay.ActorEngine
             return app;
         }
 
-        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(DbContextOptions<ModuleWriteDbContext> dbOptions)
+        public IReadOnlyCollection<IModuleDbContext> GetRegisteredDbContexts(IDbContextOptionsFactory dbContextOptionsFactory)
         {
-            return new IModuleDbContext[] { new ActorEngineDbContext(dbOptions) };
+            ArgumentNullException.ThrowIfNull(dbContextOptionsFactory);
+            return new IModuleDbContext[] { new ActorEngineDbContext(dbContextOptionsFactory.GetDbContextOptions<ModuleWriteDbContext>()) };
         }
     }
 }
