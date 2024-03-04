@@ -50,7 +50,7 @@
     <ItemGroup>
 
         <PackageReference Include="Flee" Version="2.0.0" />
-        <PackageReference Include="UnitsNet" Version="5.38.2" />
+        <PackageReference Include="UnitsNet" Version="5.48.0" />
         <PackageReference Include="PrivateSetterContractResolver" Version="2.1.0" />
         <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
